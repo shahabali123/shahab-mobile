@@ -617,7 +617,7 @@ const products = [
         id: 62,
         name: "Oppo A6 (8GB-256GB)",
         brand: "Oppo",
-        price: 63850,
+        price: 79500,
         description: "Sleek design with high-capacity storage for all your media needs.",
         images: ["./images/oppo-a6.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
