@@ -765,6 +765,9 @@ function initProductPage() {
     // Ensure scroll reveal observes new elements
     initScrollReveal();
     observeElements();
+
+    // Signal to Netlify's prerender service that the page is fully loaded and ready for snapshotting.
+    window.prerenderReady = true;
 }
 
 /**
