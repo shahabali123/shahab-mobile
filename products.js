@@ -3,6 +3,11 @@
 // =================================================================================
 // Yahan par aap installment plans ki settings change kar saktay hain.
 const installmentConfig = {
+    // Banner section k liye text
+    bannerDescription: "Itel, Infinix, aur Tecno ke latest mobiles ab asaan mahana qiston par available hain.",
+    advanceText: "20% Advance Se Shuru",
+    planSummary: "3, 6, aur 9 Mahine ke Plans",
+
     // Advance payment k options (percentages mein)
     advanceOptions: [20, 30, 50],
 
@@ -225,7 +230,7 @@ const products = [
         id: 31,
         name: "Tecno Spark 40 Pro+ (8GB-256GB)",
         brand: "Tecno",
-        price: 65999,
+        price: 69999,
         description: "Go even further with the Spark 40 Pro Plus, featuring enhanced camera sensors and faster charging.",
         images: ["./images/tecno-spark-40-pro-+.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -271,7 +276,7 @@ const products = [
         id: 35,
         name: "Itel A100 C (2GB-64GB)",
         brand: "Itel",
-        price: 27999,
+        price: 22999,
         description: "Itel A100 C offers plenty of storage for your essentials in a sleek, lightweight body.",
         images: ["./images/itel-a-100-c.jpg"],
         specs: { ram: "2GB", storage: "64GB", battery: "5000 mAh" },
@@ -323,7 +328,7 @@ const products = [
         id: 39,
         name: "Itel A100 4.5g (4GB-128GB)",
         brand: "Itel",
-        price: 29000,
+        price: 31499,
         description: "Compact and reliable, the Itel A100 is an ideal choice for essential smartphone needs.",
         images: ["./images/itel-a-1oo.webp"],
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
@@ -361,7 +366,7 @@ const products = [
         id: 42,
         name: "Infinix Hot 60i (6GB-128GB)",
         brand: "Infinix",
-        price: 49999,
+        price: 53999,
         description: "The Infinix Hot 60i delivers smooth performance and a vibrant display, perfect for daily multitasking and media.",
         images: ["./images/infinix-hot-60-i.jpg"],
         specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
@@ -374,7 +379,7 @@ const products = [
         id: 43,
         name: "Infinix Note 50 (8GB-256GB)",
         brand: "Infinix",
-        price: 82500,
+        price: 74999,
         description: "Experience flagship-level power with the Infinix Note 50. This special bundle includes a high-capacity powerbank for non-stop energy.",
         images: ["./images/infinix-note-50.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -388,7 +393,7 @@ const products = [
         id: 44,
         name: "Infinix Hot 60 Pro+ (8GB-256GB)",
         brand: "Infinix",
-        price: 67500,
+        price: 69999,
         description: "Experience flagship-level power with the Infinx Hot 60 Pro+.",
         images: ["./images/infinix-hot-60-pro+.jpg"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -493,7 +498,7 @@ const products = [
         id: 53,
         name: "Tecno Camon 50 Pro (8GB-256GB)",
         brand: "Tecno",
-        price: 97075,
+        price: 99999,
         description: "Professional camera features in your pocket. The Camon 50 Pro excels in low-light photography.",
         images: ["./images/tecno-camon-50pro.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
