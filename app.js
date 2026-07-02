@@ -540,8 +540,9 @@ function showDetails(id) {
         calcBox.className = "mt-6 bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-4 text-sm";
         calcBox.innerHTML = `
             <p class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">Installment Plans</p>
-            <table class="w-full text-center">
-                <thead class="bg-white">
+            <div class="overflow-x-auto rounded-lg">
+                <table class="w-full text-center min-w-[450px]">
+                    <thead class="bg-white">
                     <tr>
                         <th class="p-3 rounded-l-lg font-bold text-slate-600 text-xs">Advance</th>
                         ${planOptions.map(plan => `<th class="p-3 font-bold text-slate-600 text-xs">${plan.months} Months</th>`).join('')}
@@ -564,7 +565,8 @@ function showDetails(id) {
                         `;
                     }).join('')}
                 </tbody>
-            </table>
+                </table>
+            </div>
         `;
 
         modalActions.insertBefore(calcBox, addBtn);
@@ -698,8 +700,9 @@ function initProductPage() {
                 ${p.installment ? `
                     <div class="mb-8 p-6 bg-blue-50 rounded-[2rem] border border-blue-100">
                         <h4 class="font-bold text-blue-900 mb-4 flex items-center gap-2"><i class="fas fa-calculator"></i> Installment Plans</h4>
-                        <table class="w-full text-center bg-white rounded-xl overflow-hidden shadow-sm">
-                            <thead class="bg-blue-100">
+                        <div class="overflow-x-auto rounded-xl shadow-sm">
+                            <table class="w-full text-center bg-white min-w-[500px]">
+                                <thead class="bg-blue-100">
                                 <tr>
                                     <th class="p-3 font-bold text-blue-800 text-xs">Advance</th>
                                     ${config.plans.map(plan => `<th class="p-3 font-bold text-blue-800 text-xs">${plan.months} Months</th>`).join('')}
@@ -719,7 +722,8 @@ function initProductPage() {
                                         </tr>`;
                                 }).join('')}
                             </tbody>
-                        </table>
+                            </table>
+                        </div>
                     </div>
                 ` : ''}
 
