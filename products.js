@@ -1,45 +1,24 @@
-/**
- * SHAHAB MOBILE - PRODUCT DATA CONFIGURATION
- * 
- * BADGE LAGANE KA TAREEKA:
- * Agar aap chahte hain k kisi product par badge nazar aaye, to uske object mein 
- * 'badge' ki property add karein is tarah:
- * 
- * badge: { text: "APNA_TEXT", color: "bg-COLOR_NAME" }
- * 
- * Mash'hoor Colors:
- * - Neela (Blue):  bg-blue-600
- * - Surkh (Red):   bg-red-500
- * - Narangi (Hot): bg-orange-500
- * - Sabz (Green):  bg-emerald-500
- * - Jamni (Purple):bg-purple-600
- * 
- * Agar badge nahi dikhana, to us product se 'badge' wali line hata dein.
- * 
- * INSTALLMENT (Policy: 30% Down Payment, 10-20% Markup):
- * Agar product installment par dena hai, to product object mein:
- * installment: true
- * add karein.
- */
-
+// =================================================================================
+// Installment Configuration
+// =================================================================================
+// Yahan par aap installment plans ki settings change kar saktay hain.
 const installmentConfig = {
-    advancePercentage: 20,
-    plans: [
-        { months: 3, markup: 10 },
-        { months: 6, markup: 20 },
-        { months: 9, markup: 30 }
-    ],
-    planSummary: "3, 6 & 9 Months Plans",
-    advanceText: "20% Advance Payment",
-    bannerDescription: "Itel, Infinix, aur Tecno ke latest mobiles ab asaan mahana qiston par available hain. Sirf 20% advance payment dein aur apna pasandida mobile ghar le jayein, 9 mahine ki asaan iqsaat par."
-};
+    // Advance payment k options (percentages mein)
+    advanceOptions: [20, 30, 50],
 
+    // Mahinay (months) k hisab se plans aur unka SALANA markup rate
+    plans: [
+        { months: 3, markup: 18 }, // 18% salana markup 3 mahine k plan pe
+        { months: 6, markup: 36 }, // 36% salana markup 6 mahine k plan pe
+        { months: 9, markup: 54 }  // 54% salana markup 9 mahine k plan pe
+    ]
+};
 const products = [
     {
         id: 13,
         name: "Samsung A07 (4GB-64GB)",
         brand: "Samsung",
-        price: 31200,
+        price: 34999,
         description: "Samsung Galaxy A07 provides a smooth experience with its 6.7-inch display and reliable performance for daily tasks.",
         images: ["./images/samsung-a07.avif"],
         specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
@@ -51,7 +30,7 @@ const products = [
         id: 14,
         name: "Samsung A07 (4GB-128GB)",
         brand: "Samsung",
-        price: 36795,
+        price: 42499,
         description: "The Galaxy A07 with 128GB storage ensures you have plenty of space for your photos, videos, and apps.",
         images: ["./images/samsung-a07.avif"],
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
@@ -63,7 +42,7 @@ const products = [
         id: 15,
         name: "Samsung A07 (6GB-128GB)",
         brand: "Samsung",
-        price: 43175,
+        price: 49499,
         description: "Enjoy enhanced multi-tasking and performance with 6GB RAM on the Samsung Galaxy A07.",
         images: ["./images/samsung-a07.avif"],
         specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
@@ -74,7 +53,7 @@ const products = [
         id: 16,
         name: "Samsung A17 (6GB-128GB)",
         brand: "Samsung",
-        price: 63200,
+        price: 67499,
         description: "Experience premium features with the Samsung A17, featuring a stunning display and excellent camera quality.",
         images: ["./images/samsung-a17.avif"],
         specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
@@ -85,7 +64,7 @@ const products = [
         id: 17,
         name: "Samsung A17 (8GB-256GB)",
         brand: "Samsung",
-        price: 66770,
+        price: 82999,
         description: "High-end storage and powerful performance for power users with the Samsung Galaxy A17.",
         images: ["./images/samsung-a17.avif"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -96,7 +75,7 @@ const products = [
         id: 18,
         name: "Samsung A26 5G (8GB-256GB)",
         brand: "Samsung",
-        price: 87780,
+        price: 94999,
         description: "Super-fast 5G connectivity meets premium design. The Samsung A26 5G is built for the future.",
         images: ["./images/samsung-a26-5g.avif"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -108,7 +87,7 @@ const products = [
         id: 19,
         name: "Samsung A56 5G (12GB-256GB)",
         brand: "Samsung",
-        price: 130500,
+        price: 150999,
         description: "Ultimate performance with 12GB RAM and 5G speeds. The Galaxy A56 is a true flagship contender in the A-series.",
         images: ["./images/samsung-a56-5g.avif"],
         specs: { ram: "12GB", storage: "256GB", battery: "5000 mAh" },
@@ -119,7 +98,7 @@ const products = [
         id: 20,
         name: "Redmi A5 (4GB-64GB)",
         brand: "Redmi",
-        price: 30350,
+        price: 33999,
         description: "Affordable and reliable. The Redmi A5 is perfect for those looking for great value without compromising quality.",
         images: ["./images/redmi-a5.webp"],
         specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
@@ -130,7 +109,7 @@ const products = [
         id: 21,
         name: "Redmi A5 (4GB-128GB)",
         brand: "Redmi",
-        price: 33950,
+        price: 36999,
         description: "More storage for your memories. Redmi A5 128GB version keeps you going all day.",
         images: ["./images/redmi-a5.webp"],
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
@@ -152,7 +131,7 @@ const products = [
         id: 23,
         name: "Redmi Note 14 (8GB-128GB)",
         brand: "Redmi",
-        price: 57145,
+        price: 57999,
         description: "The Redmi Note 14 brings pro-level camera features and a beautiful AMOLED display to the masses.",
         images: ["./images/redmi-note-14.webp"],
         specs: { ram: "8GB", storage: "128GB", battery: "5000 mAh" },
@@ -164,7 +143,7 @@ const products = [
         id: 24,
         name: "Redmi Note 14 (8GB-256GB)",
         brand: "Redmi",
-        price: 61545,
+        price: 61999,
         description: "Double the storage for your professional photography with the Redmi Note 14 256GB model.",
         images: ["./images/redmi-note-14.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -186,7 +165,7 @@ const products = [
         id: 26,
         name: "Redmi Note 15 (8GB-128GB)",
         brand: "Redmi",
-        price: 70620,
+        price: 69999,
         description: "The next generation of Redmi Note is here. Sleek design, faster processing, and improved optics.",
         images: ["./images/redmi-note-15.webp"],
         specs: { ram: "8GB", storage: "128GB", battery: "5000 mAh" },
@@ -197,7 +176,7 @@ const products = [
         id: 27,
         name: "Redmi Note 15 (8GB-256GB)",
         brand: "Redmi",
-        price: 75680,
+        price: 74999,
         description: "Stay ahead with the Redmi Note 15, offering flagship-level features at an incredible price point.",
         images: ["./images/redmi-note-15.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -220,7 +199,7 @@ const products = [
         id: 29,
         name: "Tecno Spark Go 3 (4GB-64GB)",
         brand: "Tecno",
-        price: 32230,
+        price: 33999,
         description: "Reliable and pocket-friendly. Spark Go 3 offers great battery life and a smooth user experience.",
         images: ["./images/tecno-spark-go-3.webp"],
         specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
@@ -233,7 +212,7 @@ const products = [
         id: 30,
         name: "Tecno Spark 40 Pro (8GB-256GB)",
         brand: "Tecno",
-        price: 63855,
+        price: 61999,
         description: "Stylish design with powerful specs. The Spark 40 Pro features a massive display and excellent cameras.",
         images: ["./images/tecno-spark-40-pro.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -246,7 +225,7 @@ const products = [
         id: 31,
         name: "Tecno Spark 40 Pro+ (8GB-256GB)",
         brand: "Tecno",
-        price: 67500,
+        price: 65999,
         description: "Go even further with the Spark 40 Pro Plus, featuring enhanced camera sensors and faster charging.",
         images: ["./images/tecno-spark-40-pro-+.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -292,7 +271,7 @@ const products = [
         id: 35,
         name: "Itel A100 C (2GB-64GB)",
         brand: "Itel",
-        price: 25795,
+        price: 27999,
         description: "Itel A100 C offers plenty of storage for your essentials in a sleek, lightweight body.",
         images: ["./images/itel-a-100-c.jpg"],
         specs: { ram: "2GB", storage: "64GB", battery: "5000 mAh" },
@@ -305,7 +284,7 @@ const products = [
         id: 36,
         name: "Itel A100 C (4GB-64GB)",
         brand: "Itel",
-        price: 25795,
+        price: 27999,
         description: "Enjoy smoother performance with 4GB RAM on the Itel A100 C model.",
         images: ["./images/itel-a-100-c.jpg"],
         specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
@@ -318,7 +297,7 @@ const products = [
         id: 37,
         name: "Itel City 200 (4GB-128GB)",
         brand: "Itel",
-        price: 31500,
+        price: 31499,
         description: "Itel City 200 features a massive display and generous 128GB storage for your media needs.",
         images: ["./images/itel-city-200.webp"],
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
@@ -369,7 +348,7 @@ const products = [
         id: 41,
         name: "Tecno Spark 50 (6GB-128GB)",
         brand: "Tecno",
-        price: 48840,
+        price: 50999,
         description: "Compact and reliable, the Tecno Spark 50 is an ideal choice for essential smartphone needs.",
         images: ["./images/tecno-spark-50.webp"],
         specs: { ram: "6GB", storage: "128GB", battery: "7000 mAh" },
@@ -382,7 +361,7 @@ const products = [
         id: 42,
         name: "Infinix Hot 60i (6GB-128GB)",
         brand: "Infinix",
-        price: 50000,
+        price: 49999,
         description: "The Infinix Hot 60i delivers smooth performance and a vibrant display, perfect for daily multitasking and media.",
         images: ["./images/infinix-hot-60-i.jpg"],
         specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
@@ -422,7 +401,7 @@ const products = [
         id: 45,
         name: "Samsung S26 Ultra (12GB-512GB)",
         brand: "Samsung",
-        price: 468000,
+        price: 489999,
         description: "The pinnacle of Samsung engineering. Unmatched camera performance and the fastest processor.",
         images: ["./images/samsung-s26-ultra.jpg"],
         specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
@@ -445,7 +424,7 @@ const products = [
         id: 47,
         name: "Oppo Reno 15 Pro (12GB-512GB)",
         brand: "Oppo",
-        price: 159500,
+        price: 229999,
         description: "Elegant design meets pro-grade photography. The Reno 15 Pro is built for creators.",
         images: ["./images/oppo-reno-15-pro.png"],
         specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
@@ -468,7 +447,7 @@ const products = [
         id: 49,
         name: "Vivo V70 (12GB-512GB)",
         brand: "Vivo",
-        price: 184900,
+        price: 179999,
         description: "Experience the next level of mobile videography with Vivo's flagship V70 series.",
         images: ["./images/vivo-v70.png"],
         specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
@@ -527,7 +506,7 @@ const products = [
         id: 54,
         name: "Infinix Note 60 Pro (8GB-256GB)",
         brand: "Infinix",
-        price: 114500,
+        price: 115999,
         description: "Pushing the boundaries of mid-range power with a beautiful curved display.",
         images: ["./images/infinix-note-60-pro.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -573,7 +552,7 @@ const products = [
         id: 58,
         name: "Samsung A37 (8GB-256GB)",
         brand: "Samsung",
-        price: 150000,
+        price: 149999,
         description: "A mid-range masterpiece with flagship features and long-term software support.",
         images: ["./images/samsung-a37.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -639,7 +618,7 @@ const products = [
         id: 64,
         name: "Vivo V70 FE 5G (12GB-256GB)",
         brand: "Vivo",
-        price: 132500,
+        price: 124999,
         description: "Flagship experience in a Fan Edition. High performance 5G device.",
         images: ["./images/vivo-v70-fe.png"],
         specs: { ram: "12GB", storage: "256GB", battery: "5000 mAh" },
@@ -683,7 +662,7 @@ const products = [
         id: 68,
         name: "Tecno Spark Go 3 (4GB-128GB)",
         brand: "Tecno",
-        price: 35150,
+        price: 37999,
         description: "The popular Spark Go 3 now with doubled storage for more apps and photos.",
         images: ["./images/tecno-spark-go-3.webp"],
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
@@ -696,7 +675,7 @@ const products = [
         id: 69,
         name: "Infinix Smart 20 (4GB-128GB)",
         brand: "Infinix",
-        price: 36575,
+        price: 37999,
         description: "The latest generation of the Smart series. Reliable and stylish.",
         images: ["./images/infinix-smart-20.jpg"],
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },

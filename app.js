@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function createProductCardHtml(product, isInstallmentsPage = false) {
         // Check if we are on the installments page to change the primary button
         const mainBtnHtml = isInstallmentsPage 
-            ? `<button onclick="inquireInstallment(${product.id})" class="flex-grow bg-slate-900 text-white py-3 rounded-xl font-bold text-[10px] hover:bg-slate-800 transition shadow-lg flex items-center justify-center gap-1"><i class="fas fa-hand-holding-usd text-blue-400"></i> Inquire Plan</button>`
-            : `<button onclick="addToCart(${product.id})" class="flex-grow bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-lg shadow-blue-100">Add to Cart</button>`;
+            ? `<button onclick="event.stopPropagation(); inquireInstallment(${product.id})" class="flex-grow bg-slate-900 text-white py-3 rounded-xl font-bold text-[10px] hover:bg-slate-800 transition shadow-lg flex items-center justify-center gap-1"><i class="fas fa-hand-holding-usd text-blue-400"></i> Inquire Plan</button>`
+            : `<button onclick="event.stopPropagation(); addToCart(${product.id})" class="flex-grow bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-lg shadow-blue-100">Add to Cart</button>`;
 
         return `
         <div class="product-card reveal-item bg-white rounded-3xl p-5 border border-slate-100 group relative perspective-1000"
@@ -115,7 +115,7 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
             </div>
             <div class="flex gap-2 relative z-20">
                 ${mainBtnHtml}
-                <button onclick="toggleCompare(${product.id})" class="w-12 h-12 flex items-center justify-center rounded-xl border-2 ${compareList.includes(product.id) ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-100 text-slate-400 hover:border-blue-600 hover:text-blue-600'} transition">
+                <button onclick="event.stopPropagation(); toggleCompare(${product.id})" class="w-12 h-12 flex items-center justify-center rounded-xl border-2 ${compareList.includes(product.id) ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-100 text-slate-400 hover:border-blue-600 hover:text-blue-600'} transition">
                     <i class="fas fa-balance-scale"></i>
                 </button>
             </div>
@@ -408,6 +408,29 @@ function inquireInstallment(id) {
     window.open(`https://wa.me/923420475187?text=${encodeURIComponent(msg)}`);
 }
 
+/**
+ * Recalculates and updates the installment plan display in the modal.
+ * @param {object} product - The product object.
+ * @param {number} advancePercentage - The selected advance percentage.
+ * @param {number} months - The selected number of months for the plan.
+ */
+function calculateEMI(price, advancePercentage, months) {
+    const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advanceOptions: [20], plans: [] };
+    const selectedPlan = config.plans.find(p => p.months == months);
+    if (!selectedPlan) return 0;
+
+    const planMarkupRate = selectedPlan.markup / 100; // e.g., 0.18 for 18% on 3-month plan
+
+    const downPayment = Math.round(price * (advancePercentage / 100));
+    const loanAmount = price - downPayment;
+    
+    // Corrected Logic: Markup is for the plan duration, not annual.
+    const totalRepayable = loanAmount * (1 + planMarkupRate);
+    const emi = Math.round(totalRepayable / months);
+
+    return emi;
+}
+
 // Search Logic
 function handleSearch(e) {
     const query = e.target.value.toLowerCase();
@@ -493,6 +516,7 @@ function showDetails(id) {
     const existingInstallBtn = document.getElementById('modal-installment-btn');
     const existingCalc = document.getElementById('modal-calc-box');
     const existingInstallmentText = document.getElementById('modal-installment-text');
+    const existingAdvanceSelector = document.getElementById('modal-advance-selector');
 
     if (existingInstallmentText) existingInstallmentText.remove();
     if (existingInstallBtn) existingInstallBtn.remove();
@@ -500,36 +524,49 @@ function showDetails(id) {
 
     if (p.installment) {
         // Global config from products.js
-        const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advancePercentage: 20, plans: [] };
-        
-        const downPayment = Math.round(p.price * (config.advancePercentage / 100));
-        const remaining = p.price - downPayment;
-
-        const planResults = config.plans.map(plan => ({
-            months: plan.months,
-            perMonth: Math.round((remaining * (1 + plan.markup / 100)) / plan.months)
-        }));
-
         if (p.installmentText) {
             const installmentTextEl = document.createElement('p');
             installmentTextEl.id = 'modal-installment-text';
             installmentTextEl.className = "text-blue-600 font-bold text-sm mb-4";
             installmentTextEl.innerText = p.installmentText;
-            modalActions.insertBefore(installmentTextEl, addBtn);
         }
-
+        
+        const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advanceOptions: [20], plans: [] };
+        const advanceOptions = p.price >= 50000 ? [50, 60, 70] : (config.advanceOptions || [20, 30, 50]);
+        const planOptions = config.plans || [{months: 3, markup: 18}, {months: 6, markup: 18}, {months: 9, markup: 18}];
+        
         const calcBox = document.createElement('div');
         calcBox.id = 'modal-calc-box';
-        calcBox.className = "mt-6 bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-4";
+        calcBox.className = "mt-6 bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-4 text-sm";
         calcBox.innerHTML = `
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Installment Estimate (${config.advancePercentage}% Advance)</p>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <div class="bg-white p-2 rounded-lg text-center shadow-sm border border-slate-100"><p class="text-[9px] text-slate-400 font-bold mb-1">Advance</p><p class="text-[10px] font-bold text-slate-800">Rs. ${downPayment.toLocaleString()}</p></div>
-                ${planResults.map(plan => `
-                    <div class="bg-white p-2 rounded-lg text-center shadow-sm border border-slate-100"><p class="text-[9px] text-slate-400 font-bold mb-1">${plan.months} Months</p><p class="text-[10px] font-bold text-blue-600">Rs. ${plan.perMonth.toLocaleString()}/mo</p></div>
-                `).join('')}
-            </div>
+            <p class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">Installment Plans</p>
+            <table class="w-full text-center">
+                <thead class="bg-white">
+                    <tr>
+                        <th class="p-3 rounded-l-lg font-bold text-slate-600 text-xs">Advance</th>
+                        ${planOptions.map(plan => `<th class="p-3 font-bold text-slate-600 text-xs">${plan.months} Months</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${advanceOptions.map(advPercent => {
+                        const downPayment = Math.round(p.price * (advPercent / 100));
+                        return `
+                            <tr class="border-t border-slate-200">
+                                <td class="p-2 font-bold text-slate-800">
+                                    ${advPercent}%
+                                    <span class="block text-xs text-slate-500 font-normal">Rs. ${downPayment.toLocaleString()}</span>
+                                </td>
+                                ${planOptions.map(plan => {
+                                    const emi = calculateEMI(p.price, advPercent, plan.months);
+                                    return `<td class="p-2 font-bold text-blue-600">Rs. ${emi.toLocaleString()}<span class="text-xs font-normal">/mo</span></td>`;
+                                }).join('')}
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
         `;
+
         modalActions.insertBefore(calcBox, addBtn);
 
         const instBtn = document.createElement('button');
@@ -537,8 +574,8 @@ function showDetails(id) {
         instBtn.className = "w-full mt-3 bg-slate-100 text-slate-900 py-4 rounded-2xl font-bold hover:bg-slate-200 transition flex items-center justify-center gap-2 border border-slate-200";
         instBtn.innerHTML = `<i class="fas fa-hand-holding-usd text-blue-600"></i> Inquire Installment Plan`;
         instBtn.onclick = () => {
-            const options = config.plans.map(pl => pl.months).join(', ') + " Months";
-            const msg = `Asalam-o-Alaikum Shahab Mobile! Mujhay is product ki installments ki details chahiye:\n\nDevice: ${p.name}\nTotal Price: Rs. ${p.price.toLocaleString()}\nAdvance Payment (${config.advancePercentage}%): Rs. ${downPayment.toLocaleString()}\nPlan options: ${options}`;
+            const planDurations = config.plans.map(pl => pl.months).join(', ') + " Months";
+            let msg = `Asalam-o-Alaikum Shahab Mobile! Mujhay is product ki installments ki details chahiye:\n\n*Device:* ${p.name}\n*Total Price:* Rs. ${p.price.toLocaleString()}\n\nAvailable plans are ${planDurations}. Please provide more details.`;
             window.open(`https://wa.me/923420475187?text=${encodeURIComponent(msg)}`);
         };
         modalActions.appendChild(instBtn);
@@ -569,10 +606,30 @@ function initProductPage() {
         return;
     }
 
+    // Set up lightbox images for this product
+    lightboxImages = p.images;
+    lightboxIndex = 0;
+
     // Update SEO Metadata
     document.title = `${p.name} - Rs. ${p.price.toLocaleString()} | Shahab Mobile`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', `Buy ${p.name} for Rs. ${p.price.toLocaleString()} at Shahab Mobile Mansehra. ${p.description}`);
+
+    // Update Open Graph and Twitter Card meta tags for better sharing
+    const productUrl = window.location.href;
+    const imageUrl = window.location.origin + p.images[0].replace('./', '/');
+    const shareTitle = `${p.name} - Rs. ${p.price.toLocaleString()}`;
+    const shareDesc = `Official Warranty ✓ Easy Installments ✓ Click to see details for ${p.name} at Shahab Mobile.`;
+
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', shareTitle);
+    document.querySelector('meta[property="twitter:title"]')?.setAttribute('content', shareTitle);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', shareDesc);
+    document.querySelector('meta[property="twitter:description"]')?.setAttribute('content', shareDesc);
+    document.querySelector('meta[property="og:image"]')?.setAttribute('content', imageUrl);
+    document.querySelector('meta[property="twitter:image"]')?.setAttribute('content', imageUrl);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', productUrl);
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', productUrl);
+
 
     // Dynamic Structured Data for SEO (Product Schema)
     const productSchema = {
@@ -607,23 +664,18 @@ function initProductPage() {
 
     // Render full page content
     const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advancePercentage: 20, plans: [] };
-    const downPayment = Math.round(p.price * (config.advancePercentage / 100));
-    const remaining = p.price - downPayment;
-    const planResults = config.plans.map(plan => ({
-        months: plan.months,
-        perMonth: Math.round((remaining * (1 + plan.markup / 100)) / plan.months)
-    }));
+    const advanceOptionsForPage = p.price >= 50000 ? [50, 60, 70] : (config.advanceOptions || [20, 30, 50]);
 
     container.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 w-full">
             <div class="bg-slate-50 p-8 md:p-16 flex flex-col gap-6 items-center">
-                <div class="aspect-square w-full max-w-md bg-white rounded-[3rem] shadow-inner border border-slate-100 flex items-center justify-center p-8 loading-image-container">
+                <div class="aspect-square w-full max-w-md bg-white rounded-[3rem] shadow-inner border border-slate-100 flex items-center justify-center p-8 loading-image-container cursor-zoom-in" onclick="openLightbox()">
                     <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
-                    <img src="${p.images[0]}" class="max-w-full max-h-full object-contain" onload="this.parentElement.classList.add('loaded');">
+                    <img src="${p.images[0]}" class="max-w-full max-h-full object-contain" onload="this.parentElement.classList.add('loaded');" alt="${p.name}">
                 </div>
                 <div class="flex gap-4 overflow-x-auto w-full justify-center">
                     ${p.images.map((img, idx) => `
-                        <div class="w-20 h-20 rounded-2xl bg-white border border-slate-100 p-2 flex-shrink-0 loading-image-container">
+                        <div class="w-20 h-20 rounded-2xl bg-white border border-slate-100 p-2 flex-shrink-0 loading-image-container cursor-pointer hover:border-blue-500" onclick="updateProductPageImage(${idx})">
                             <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
                             <img src="${img}" class="w-full h-full object-contain" onload="this.parentElement.classList.add('loaded');">
                         </div>
@@ -645,13 +697,29 @@ function initProductPage() {
 
                 ${p.installment ? `
                     <div class="mb-8 p-6 bg-blue-50 rounded-[2rem] border border-blue-100">
-                        <h4 class="font-bold text-blue-900 mb-4 flex items-center gap-2"><i class="fas fa-calculator"></i> Installment Plan</h4>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                            <div class="bg-white p-3 rounded-xl shadow-sm"><p class="text-[10px] text-slate-400">Advance</p><p class="font-bold text-sm">Rs. ${downPayment.toLocaleString()}</p></div>
-                            ${planResults.map(plan => `
-                                <div class="bg-white p-3 rounded-xl shadow-sm"><p class="text-[10px] text-slate-400">${plan.months} Mo</p><p class="font-bold text-sm text-blue-600">Rs. ${plan.perMonth.toLocaleString()}</p></div>
-                            `).join('')}
-                        </div>
+                        <h4 class="font-bold text-blue-900 mb-4 flex items-center gap-2"><i class="fas fa-calculator"></i> Installment Plans</h4>
+                        <table class="w-full text-center bg-white rounded-xl overflow-hidden shadow-sm">
+                            <thead class="bg-blue-100">
+                                <tr>
+                                    <th class="p-3 font-bold text-blue-800 text-xs">Advance</th>
+                                    ${config.plans.map(plan => `<th class="p-3 font-bold text-blue-800 text-xs">${plan.months} Months</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${advanceOptionsForPage.map(advPercent => {
+                                    const downPayment = Math.round(p.price * (advPercent / 100));
+                                    return `
+                                        <tr class="border-t border-blue-200">
+                                            <td class="p-2 font-bold text-slate-800 text-sm">
+                                                ${advPercent}%
+                                                <span class="block text-xs text-slate-500 font-normal">Rs. ${downPayment.toLocaleString()}</span>
+                                            </td>
+                                            ${config.plans.map(plan => `
+                                                <td class="p-2 font-bold text-blue-600 text-sm">Rs. ${calculateEMI(p.price, advPercent, plan.months).toLocaleString()}<span class="text-xs font-normal">/mo</span></td>`).join('')}
+                                        </tr>`;
+                                }).join('')}
+                            </tbody>
+                        </table>
                     </div>
                 ` : ''}
 
@@ -693,6 +761,22 @@ function initProductPage() {
     // Ensure scroll reveal observes new elements
     initScrollReveal();
     observeElements();
+}
+
+/**
+ * Updates the main image on the single product page when a thumbnail is clicked.
+ * @param {number} index - The index of the image in the product's image array.
+ */
+function updateProductPageImage(index) {
+    lightboxIndex = index; // Update the global index for the lightbox
+    const mainImageContainer = document.querySelector('#product-page-content .loading-image-container');
+    if (!mainImageContainer) return;
+
+    const newImageSrc = lightboxImages[index];
+    mainImageContainer.classList.remove('loaded');
+    mainImageContainer.innerHTML = `
+        <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
+        <img src="${newImageSrc}" class="max-w-full max-h-full object-contain" onload="this.parentElement.classList.add('loaded');" alt="">`;
 }
 
 function shareProduct(productId) {

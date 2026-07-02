@@ -57,7 +57,7 @@
                 <!-- Navbar Search (Responsive) -->
                 <div class="relative w-full lg:max-w-md mx-0 lg:mx-4 group order-3 lg:order-none">
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="searchBar" onkeyup="if(event.key === 'Enter') renderProducts(true, true); handleSearch(event)" onfocus="handleSearch(event)" placeholder="Search installment devices..." class="w-full bg-slate-50 border border-slate-200 pl-12 pr-20 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all" autocomplete="off">
+                    <input type="text" id="searchBar" onkeyup="if(event.key === 'Enter') { renderProducts(true, true); document.getElementById('search-suggestions')?.classList.add('hidden'); } else { handleSearch(event); }" onfocus="handleSearch(event)" placeholder="Search installment devices..." class="w-full bg-slate-50 border border-slate-200 pl-12 pr-20 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all" autocomplete="off">
                     <button onclick="renderProducts(true, true); document.getElementById('search-suggestions')?.classList.add('hidden')" class="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition">Search</button>
                     <div id="search-suggestions" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 hidden z-[100] max-h-64 overflow-y-auto custom-scrollbar"></div>
                 </div>
