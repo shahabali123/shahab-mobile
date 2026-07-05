@@ -131,6 +131,21 @@
         .loading-image-container.loaded img { display: block; /* Show image when loaded */ }
         .loading-image-container.loaded .image-loader { display: none; /* Hide loader when loaded */ }
     </style>
+    <style>
+        /* Watermark Logo Styles */
+        .watermark-logo {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background-image: url('./images/logo.png');
+            background-size: cover;
+            border-radius: 50%;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900 overflow-x-hidden">
 

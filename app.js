@@ -117,6 +117,7 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
             <div class="aspect-square bg-slate-50 rounded-2xl mb-5 flex items-center justify-center overflow-hidden loading-image-container">
                 <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
                 <img src="${product.images[0]}" class="w-4/5 h-4/5 object-contain group-hover:scale-110 transition duration-500" onload="this.parentElement.classList.add('loaded');">
+                <div class="watermark-logo"></div>
             </div>
             <p class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-1">${product.brand}</p>
             <h3 class="font-bold text-slate-800 mb-2 truncate cursor-pointer hover:text-blue-600" title="${product.name}" onclick="window.location.href='product.html?id=${product.id}'">${product.name}</h3>
@@ -686,8 +687,9 @@ function initProductPage() {
     container.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 w-full">
             <div class="bg-slate-50 p-8 md:p-12 flex flex-col gap-6 items-center">
-                <div class="img-zoom-container w-full max-w-md relative loading-image-container">
-                    <img id="product-page-main-image" src="${p.images[0]}" class="w-full aspect-square object-contain bg-white rounded-[3rem] shadow-inner border border-slate-100 p-8 cursor-zoom-in" onload="this.parentElement.classList.add('loaded'); initImageZoom('product-page-main-image', 'zoom-result');" alt="${p.name}" onclick="openLightbox()">
+                <div class="w-full max-w-md relative loading-image-container" onclick="openLightbox(${p.id})">
+                    <img id="product-page-main-image" src="${p.images[0]}" class="w-full aspect-square object-contain bg-white rounded-[3rem] shadow-inner border border-slate-100 p-8 cursor-pointer" onload="this.parentElement.classList.add('loaded');" alt="${p.name}">
+                    <div class="watermark-logo"></div>
                 </div>
                 <div class="flex gap-4 overflow-x-auto w-full justify-center">
                     ${p.images.map((img, idx) => `
@@ -699,7 +701,6 @@ function initProductPage() {
                 </div>
             </div>
             <div class="p-8 md:p-12 lg:p-16 flex flex-col justify-center relative">
-                <div id="zoom-result" class="img-zoom-result hidden lg:block"></div>
                 <span class="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 w-fit">${p.brand}</span>
                 <h2 class="text-4xl md:text-5xl font-black mb-4 text-slate-900">${p.name}</h2>
                 <p class="text-3xl font-bold text-blue-600 mb-8">Rs. ${p.price.toLocaleString()}</p>
@@ -817,7 +818,6 @@ function updateProductPageImage(index) {
     // Re-initialize zoom on new image load
     mainImage.onload = () => { 
         mainImage.parentElement.classList.add('loaded'); 
-        initImageZoom('product-page-main-image', 'zoom-result'); 
     };
 }
 
@@ -856,86 +856,28 @@ function updateMainImage(index) {
 
 }
 
-function initImageZoom(imgID, resultID) {
-    let img, lens, result, cx, cy;
-    img = document.getElementById(imgID);
-    result = document.getElementById(resultID);
-    if (!img || !result) return;
-
-    // Remove existing lens if any
-    let existingLens = document.querySelector(".img-zoom-lens");
-    if (existingLens) existingLens.remove();
-
-    /* Create lens: */
-    lens = document.createElement("DIV");
-    lens.setAttribute("class", "img-zoom-lens");
-    /* Insert lens: */
-    img.parentElement.insertBefore(lens, img);
-
-    /* Calculate the ratio between result DIV and lens: */
-    cx = result.offsetWidth / lens.offsetWidth;
-    cy = result.offsetHeight / lens.offsetHeight;
-
-    /* Set background properties for the result DIV: */
-    result.style.backgroundImage = "url('" + img.src + "')";
-    result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
-
-    /* Execute a function when someone moves the cursor over the image, or the lens: */
-    lens.addEventListener("mousemove", moveLens);
-    img.addEventListener("mousemove", moveLens);
-    /* And also for touch screens: */
-    lens.addEventListener("touchmove", moveLens);
-    img.addEventListener("touchmove", moveLens);
-
-    img.parentElement.addEventListener("mouseenter", () => {
-        lens.style.display = "block";
-        result.style.display = "block";
-    });
-    img.parentElement.addEventListener("mouseleave", () => {
-        lens.style.display = "none";
-        result.style.display = "none";
-    });
-
-    function moveLens(e) {
-        let pos, x, y;
-        /* Prevent any other actions that may occur when moving over the image: */
-        e.preventDefault();
-        /* Get the cursor's x and y positions: */
-        pos = getCursorPos(e);
-        /* Calculate the position of the lens: */
-        x = pos.x - (lens.offsetWidth / 2);
-        y = pos.y - (lens.offsetHeight / 2);
-        /* Prevent the lens from being positioned outside the image: */
-        if (x > img.width - lens.offsetWidth) { x = img.width - lens.offsetWidth; }
-        if (x < 0) { x = 0; }
-        if (y > img.height - lens.offsetHeight) { y = img.height - lens.offsetHeight; }
-        if (y < 0) { y = 0; }
-        /* Set the position of the lens: */
-        lens.style.left = x + "px";
-        lens.style.top = y + "px";
-        /* Display what the lens "sees": */
-        result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+/**
+ * Opens the lightbox to view product images in full-screen.
+ * @param {number} [productId] - The ID of the product to display. If not provided, it uses the globally set product.
+ */
+function openLightbox(productId) {
+    // Agar productId di gayi hai, to us product ko set karo.
+    if (productId) {
+        const p = products.find(product => product.id === productId);
+        if (!p) return;
+        currentLightboxProduct = p;
+        lightboxImages = p.images;
+        // lightboxIndex ko reset nahi karte takay thumbnail click k baad sahi image khulay.
     }
-    function getCursorPos(e) {
-        let a, x = 0, y = 0;
-        e = e || window.event;
-        /* Get the x and y positions of the image: */
-        a = img.getBoundingClientRect();
-        /* Calculate the cursor's x and y coordinates, relative to the image: */
-        x = (e.pageX || e.touches[0].pageX) - a.left - window.pageXOffset;
-        y = (e.pageY || e.touches[0].pageY) - a.top - window.pageYOffset;
-        return { x: x, y: y };
-    }
-}
 
-function openLightbox() {
     const modal = document.getElementById('lightbox-modal');
     const img = document.getElementById('lightbox-img');
-    if (!modal || !img) return;
+    if (!modal || !img || !currentLightboxProduct) return; // Ensure a product is set
 
     const lightboxContent = document.getElementById('lightbox-content');
     if (!lightboxContent) return;
     const lightboxDetails = document.getElementById('lightbox-details');
+    const existingWatermark = lightboxContent.querySelector('.watermark-logo');
 
     img.src = lightboxImages[lightboxIndex];
     img.onload = () => { img.style.display = 'block'; };
@@ -944,6 +886,13 @@ function openLightbox() {
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     updateLightboxUI();
+
+    // Add watermark if it doesn't exist
+    if (!existingWatermark) {
+        const watermark = document.createElement('div');
+        watermark.className = 'watermark-logo';
+        lightboxContent.appendChild(watermark);
+    }
 
     // Populate details if a product is associated
     if (currentLightboxProduct && lightboxDetails) {
