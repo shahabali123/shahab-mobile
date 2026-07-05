@@ -822,17 +822,17 @@ function shareProduct(productId) {
 
     const shareUrl = window.location.href; // Direct link to this specific product page
     const shareTitle = `${p.name} - Rs. ${p.price.toLocaleString()}`;
-    const shareText = `Check out the ${p.name} at Shahab Mobile!`;
 
     if (navigator.share) {
+        // Mobile share: Only share the URL to force social media apps
+        // to generate a preview card from the link's meta tags.
         navigator.share({
-            title: shareTitle,
-            text: shareText,
             url: shareUrl
         });
     } else {
-        // Fallback for non-Web Share API browsers (e.g., desktop WhatsApp)
-        window.open(`https://wa.me/?text=${encodeURIComponent(shareTitle + '\n' + shareUrl)}`, '_blank');
+        // Fallback for desktop browsers: Open WhatsApp with a clean title and the link.
+        const whatsappText = `${shareTitle}\n${shareUrl}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(whatsappText)}`, '_blank');
         showToast("WhatsApp share opened. Link copied to clipboard!", "info");
     }
 }
