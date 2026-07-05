@@ -11,11 +11,11 @@ const installmentConfig = {
     // Advance payment k options (percentages mein)
     advanceOptions: [20, 30, 50],
 
-    // Mahinay (months) k hisab se plans aur unka SALANA markup rate
+    // Mahinay (months) k hisab se plans aur unka TOTAL markup rate (plan ki muddat k liye)
     plans: [
-        { months: 3, markup: 18 }, // 18% salana markup 3 mahine k plan pe
-        { months: 6, markup: 36 }, // 36% salana markup 6 mahine k plan pe
-        { months: 9, markup: 54 }  // 54% salana markup 9 mahine k plan pe
+        { months: 3, markup: 18 }, // 3 mahine k plan pe total 18% markup
+        { months: 6, markup: 36 },   // 6 mahine k plan pe total 36% markup
+        { months: 9, markup: 54 } // 9 mahine k plan pe total 54% markup
     ]
 };
 const products = [

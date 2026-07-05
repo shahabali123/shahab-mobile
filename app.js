@@ -4,6 +4,7 @@ let compareList = JSON.parse(localStorage.getItem('shahab_compare')) || [];
 let currentPage = 1;
 let lightboxImages = [];
 let lightboxIndex = 0;
+let currentLightboxProduct = null; // To store product for lightbox details
 const itemsPerPage = 8;
 
 // Helper function for haptic feedback (Vibration)
@@ -414,21 +415,40 @@ function inquireInstallment(id) {
  * @param {number} advancePercentage - The selected advance percentage.
  * @param {number} months - The selected number of months for the plan.
  */
-function calculateEMI(price, advancePercentage, months) {
+function calculateInstallmentDetails(price, advancePercentage, months) {
     const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advanceOptions: [20], plans: [] };
     const selectedPlan = config.plans.find(p => p.months == months);
-    if (!selectedPlan) return 0;
+    if (!selectedPlan) return { emi: 0, total: 0 };
 
-    const planMarkupRate = selectedPlan.markup / 100; // e.g., 0.18 for 18% on 3-month plan
+    // Markup is for the plan duration, not annual. e.g., 4.5% for 3 months.
+    const planMarkupRate = selectedPlan.markup / 100; 
 
     const downPayment = Math.round(price * (advancePercentage / 100));
     const loanAmount = price - downPayment;
-    
-    // Corrected Logic: Markup is for the plan duration, not annual.
-    const totalRepayable = loanAmount * (1 + planMarkupRate);
+    const totalRepayable = loanAmount * (1 + planMarkupRate); // Markup is applied on the loan amount
     const emi = Math.round(totalRepayable / months);
+    const totalCost = downPayment + (emi * months);
 
-    return emi;
+    return { emi, totalCost };
+}
+
+/**
+ * Gets the applicable advance payment options based on product price.
+ * @param {number} price - The price of the product.
+ * @returns {number[]} An array of advance percentages.
+ */
+function getAdvanceOptionsForPrice(price) {
+    if (price <= 40000) {
+        return [20, 30, 50];
+    } else if (price > 40000 && price <= 60000) {
+        return [25, 35, 50];
+    } else if (price > 60000 && price <= 80000) {
+        return [30, 40, 50];
+    } else if (price > 80000 && price <= 100000) {
+        return [35, 40, 50];
+    } else { // For prices over 100,000
+        return [40, 50];
+    }
 }
 
 // Search Logic
@@ -472,6 +492,7 @@ function showDetails(id) {
 
     lightboxImages = p.images;
     lightboxIndex = 0;
+    currentLightboxProduct = p; // Store the product for the lightbox
 
     document.getElementById('modal-title').innerText = p.name;
     document.getElementById('modal-price').innerText = `Rs. ${p.price.toLocaleString()}`;
@@ -482,10 +503,7 @@ function showDetails(id) {
 
     // Main image with loader
     const mainImg = document.getElementById('modal-main-image');
-    mainImg.innerHTML = `
-        <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
-        <img src="${p.images[0]}" class="w-4/5 h-4/5 object-contain cursor-zoom-in" onclick="openLightbox()" onload="this.parentElement.classList.add('loaded');">
-    `;
+    mainImg.innerHTML = `<img src="${p.images[0]}" class="w-4/5 h-4/5 object-contain cursor-zoom-in" onclick="openLightbox()">`;
     mainImg.classList.remove('loaded'); // Ensure loader is visible for new image
 
     // Thumbnails with loaders
@@ -532,8 +550,7 @@ function showDetails(id) {
         }
         
         const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advanceOptions: [20], plans: [] };
-        const advanceOptions = p.price >= 50000 ? [50, 60, 70] : (config.advanceOptions || [20, 30, 50]);
-        const planOptions = config.plans || [{months: 3, markup: 18}, {months: 6, markup: 18}, {months: 9, markup: 18}];
+        const advanceOptions = getAdvanceOptionsForPrice(p.price);
         
         const calcBox = document.createElement('div');
         calcBox.id = 'modal-calc-box';
@@ -541,11 +558,11 @@ function showDetails(id) {
         calcBox.innerHTML = `
             <p class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4">Installment Plans</p>
             <div class="overflow-x-auto rounded-lg">
-                <table class="w-full text-center min-w-[450px]">
+                <table class="w-full text-center min-w-[550px]">
                     <thead class="bg-white">
                     <tr>
                         <th class="p-3 rounded-l-lg font-bold text-slate-600 text-xs">Advance</th>
-                        ${planOptions.map(plan => `<th class="p-3 font-bold text-slate-600 text-xs">${plan.months} Months</th>`).join('')}
+                        ${config.plans.map(plan => `<th class="p-3 font-bold text-slate-600 text-xs">${plan.months} Months Plan</th>`).join('')}
                     </tr>
                 </thead>
                 <tbody>
@@ -557,9 +574,13 @@ function showDetails(id) {
                                     ${advPercent}%
                                     <span class="block text-xs text-slate-500 font-normal">Rs. ${downPayment.toLocaleString()}</span>
                                 </td>
-                                ${planOptions.map(plan => {
-                                    const emi = calculateEMI(p.price, advPercent, plan.months);
-                                    return `<td class="p-2 font-bold text-blue-600">Rs. ${emi.toLocaleString()}<span class="text-xs font-normal">/mo</span></td>`;
+                                ${config.plans.map(plan => {
+                                                const { emi } = calculateInstallmentDetails(p.price, advPercent, plan.months);
+                                                const totalInstallments = emi * plan.months;
+                                    return `<td class="p-2 font-bold text-blue-600">
+                                                    Rs. ${emi.toLocaleString()}<span class="text-xs font-normal">/mo</span>
+                                                    <span class="block text-[10px] text-slate-400 font-normal">Total Installments: ${totalInstallments.toLocaleString()}</span>
+                                            </td>`;
                                 }).join('')}
                             </tr>
                         `;
@@ -611,6 +632,7 @@ function initProductPage() {
     // Set up lightbox images for this product
     lightboxImages = p.images;
     lightboxIndex = 0;
+    currentLightboxProduct = p; // Store the product for the lightbox
 
     // Update SEO Metadata
     document.title = `${p.name} - Rs. ${p.price.toLocaleString()} | Shahab Mobile`;
@@ -666,14 +688,12 @@ function initProductPage() {
 
     // Render full page content
     const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advancePercentage: 20, plans: [] };
-    const advanceOptionsForPage = p.price >= 50000 ? [50, 60, 70] : (config.advanceOptions || [20, 30, 50]);
-
+    const advanceOptionsForPage = getAdvanceOptionsForPrice(p.price);
     container.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 w-full">
-            <div class="bg-slate-50 p-8 md:p-16 flex flex-col gap-6 items-center">
-                <div class="aspect-square w-full max-w-md bg-white rounded-[3rem] shadow-inner border border-slate-100 flex items-center justify-center p-8 loading-image-container cursor-zoom-in" onclick="openLightbox()">
-                    <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
-                    <img src="${p.images[0]}" class="max-w-full max-h-full object-contain" onload="this.parentElement.classList.add('loaded');" alt="${p.name}">
+            <div class="bg-slate-50 p-8 md:p-12 flex flex-col gap-6 items-center">
+                <div class="img-zoom-container w-full max-w-md relative loading-image-container">
+                    <img id="product-page-main-image" src="${p.images[0]}" class="w-full aspect-square object-contain bg-white rounded-[3rem] shadow-inner border border-slate-100 p-8 cursor-zoom-in" onload="this.parentElement.classList.add('loaded'); initImageZoom('product-page-main-image', 'zoom-result');" alt="${p.name}" onclick="openLightbox()">
                 </div>
                 <div class="flex gap-4 overflow-x-auto w-full justify-center">
                     ${p.images.map((img, idx) => `
@@ -684,7 +704,8 @@ function initProductPage() {
                     `).join('')}
                 </div>
             </div>
-            <div class="p-8 md:p-16 flex flex-col justify-center">
+            <div class="p-8 md:p-12 lg:p-16 flex flex-col justify-center relative">
+                <div id="zoom-result" class="img-zoom-result hidden lg:block"></div>
                 <span class="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 w-fit">${p.brand}</span>
                 <h2 class="text-4xl md:text-5xl font-black mb-4 text-slate-900">${p.name}</h2>
                 <p class="text-3xl font-bold text-blue-600 mb-8">Rs. ${p.price.toLocaleString()}</p>
@@ -700,11 +721,11 @@ function initProductPage() {
                 ${p.installment ? `
                     <div class="mb-8 p-6 bg-blue-50 rounded-[2rem] border border-blue-100">
                         <h4 class="font-bold text-blue-900 mb-4 flex items-center gap-2"><i class="fas fa-calculator"></i> Installment Plans</h4>
-                        <div class="overflow-x-auto rounded-xl shadow-sm">
-                            <table class="w-full text-center bg-white min-w-[500px]">
+                        <div class="overflow-x-auto rounded-xl shadow-sm bg-white">
+                            <table class="w-full text-center min-w-[550px]">
                                 <thead class="bg-blue-100">
                                 <tr>
-                                    <th class="p-3 font-bold text-blue-800 text-xs">Advance</th>
+                                    <th class="p-3 font-bold text-blue-800 text-xs rounded-tl-xl">Advance</th>
                                     ${config.plans.map(plan => `<th class="p-3 font-bold text-blue-800 text-xs">${plan.months} Months</th>`).join('')}
                                 </tr>
                             </thead>
@@ -718,7 +739,10 @@ function initProductPage() {
                                                 <span class="block text-xs text-slate-500 font-normal">Rs. ${downPayment.toLocaleString()}</span>
                                             </td>
                                             ${config.plans.map(plan => `
-                                                <td class="p-2 font-bold text-blue-600 text-sm">Rs. ${calculateEMI(p.price, advPercent, plan.months).toLocaleString()}<span class="text-xs font-normal">/mo</span></td>`).join('')}
+                                                <td class="p-2 font-bold text-blue-600 text-sm">
+                                                    Rs. ${calculateInstallmentDetails(p.price, advPercent, plan.months).emi.toLocaleString()}<span class="text-xs font-normal">/mo</span>
+                                                    <span class="block text-[10px] text-slate-400 font-normal">Total Installments: ${(calculateInstallmentDetails(p.price, advPercent, plan.months).emi * plan.months).toLocaleString()}</span>
+                                                </td>`).join('')}
                                         </tr>`;
                                 }).join('')}
                             </tbody>
@@ -775,15 +799,18 @@ function initProductPage() {
  * @param {number} index - The index of the image in the product's image array.
  */
 function updateProductPageImage(index) {
-    lightboxIndex = index; // Update the global index for the lightbox
-    const mainImageContainer = document.querySelector('#product-page-content .loading-image-container');
-    if (!mainImageContainer) return;
+    lightboxIndex = index;
+    const mainImage = document.getElementById('product-page-main-image');
+    if (!mainImage) return;
 
     const newImageSrc = lightboxImages[index];
-    mainImageContainer.classList.remove('loaded');
-    mainImageContainer.innerHTML = `
-        <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
-        <img src="${newImageSrc}" class="max-w-full max-h-full object-contain" onload="this.parentElement.classList.add('loaded');" alt="">`;
+    mainImage.parentElement.classList.remove('loaded');
+    mainImage.src = newImageSrc;
+    // Re-initialize zoom on new image load
+    mainImage.onload = () => { 
+        mainImage.parentElement.classList.add('loaded'); 
+        initImageZoom('product-page-main-image', 'zoom-result'); 
+    };
 }
 
 function shareProduct(productId) {
@@ -815,12 +842,81 @@ function updateMainImage(index) {
     if (!mainImgContainer) return;
 
     // Clear previous content and add loader
-    mainImgContainer.innerHTML = `
-        <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
-        <img src="${lightboxImages[index]}" class="w-4/5 h-4/5 object-contain cursor-zoom-in" onclick="openLightbox()" onload="this.parentElement.classList.add('loaded');">
-    `;
+    mainImgContainer.innerHTML = `<img src="${lightboxImages[index]}" class="w-4/5 h-4/5 object-contain cursor-zoom-in" onclick="openLightbox()">`;
     mainImgContainer.classList.remove('loaded'); // Ensure loader is visible for new image
 
+}
+
+function initImageZoom(imgID, resultID) {
+    let img, lens, result, cx, cy;
+    img = document.getElementById(imgID);
+    result = document.getElementById(resultID);
+    if (!img || !result) return;
+
+    // Remove existing lens if any
+    let existingLens = document.querySelector(".img-zoom-lens");
+    if (existingLens) existingLens.remove();
+
+    /* Create lens: */
+    lens = document.createElement("DIV");
+    lens.setAttribute("class", "img-zoom-lens");
+    /* Insert lens: */
+    img.parentElement.insertBefore(lens, img);
+
+    /* Calculate the ratio between result DIV and lens: */
+    cx = result.offsetWidth / lens.offsetWidth;
+    cy = result.offsetHeight / lens.offsetHeight;
+
+    /* Set background properties for the result DIV: */
+    result.style.backgroundImage = "url('" + img.src + "')";
+    result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+
+    /* Execute a function when someone moves the cursor over the image, or the lens: */
+    lens.addEventListener("mousemove", moveLens);
+    img.addEventListener("mousemove", moveLens);
+    /* And also for touch screens: */
+    lens.addEventListener("touchmove", moveLens);
+    img.addEventListener("touchmove", moveLens);
+
+    img.parentElement.addEventListener("mouseenter", () => {
+        lens.style.display = "block";
+        result.style.display = "block";
+    });
+    img.parentElement.addEventListener("mouseleave", () => {
+        lens.style.display = "none";
+        result.style.display = "none";
+    });
+
+    function moveLens(e) {
+        let pos, x, y;
+        /* Prevent any other actions that may occur when moving over the image: */
+        e.preventDefault();
+        /* Get the cursor's x and y positions: */
+        pos = getCursorPos(e);
+        /* Calculate the position of the lens: */
+        x = pos.x - (lens.offsetWidth / 2);
+        y = pos.y - (lens.offsetHeight / 2);
+        /* Prevent the lens from being positioned outside the image: */
+        if (x > img.width - lens.offsetWidth) { x = img.width - lens.offsetWidth; }
+        if (x < 0) { x = 0; }
+        if (y > img.height - lens.offsetHeight) { y = img.height - lens.offsetHeight; }
+        if (y < 0) { y = 0; }
+        /* Set the position of the lens: */
+        lens.style.left = x + "px";
+        lens.style.top = y + "px";
+        /* Display what the lens "sees": */
+        result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+    }
+    function getCursorPos(e) {
+        let a, x = 0, y = 0;
+        e = e || window.event;
+        /* Get the x and y positions of the image: */
+        a = img.getBoundingClientRect();
+        /* Calculate the cursor's x and y coordinates, relative to the image: */
+        x = (e.pageX || e.touches[0].pageX) - a.left - window.pageXOffset;
+        y = (e.pageY || e.touches[0].pageY) - a.top - window.pageYOffset;
+        return { x: x, y: y };
+    }
 }
 
 function openLightbox() {
@@ -830,18 +926,26 @@ function openLightbox() {
 
     const lightboxContent = document.getElementById('lightbox-content');
     if (!lightboxContent) return;
-
-    // Reset loader state
-    lightboxContent.classList.remove('loaded');
-    img.style.display = 'none'; // Hide image until loaded
+    const lightboxDetails = document.getElementById('lightbox-details');
 
     img.src = lightboxImages[lightboxIndex];
-    img.onload = () => { lightboxContent.classList.add('loaded'); img.style.display = 'block'; };
-    img.onerror = () => { lightboxContent.classList.add('loaded'); img.style.display = 'block'; }; // Show broken image icon on error
+    img.onload = () => { img.style.display = 'block'; };
+    img.onerror = () => { img.style.display = 'block'; }; // Show broken image icon on error
 
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     updateLightboxUI();
+
+    // Populate details if a product is associated
+    if (currentLightboxProduct && lightboxDetails) {
+        const p = currentLightboxProduct;
+        lightboxDetails.innerHTML = `
+            <span class="bg-white/10 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 w-fit">${p.brand}</span>
+            <h2 class="text-4xl font-black mb-4">${p.name}</h2>
+            <p class="text-3xl font-bold text-blue-400 mb-6">Rs. ${p.price.toLocaleString()}</p>
+            <p class="text-slate-400 leading-relaxed line-clamp-4">${p.description}</p>
+        `;
+    }
 }
 
 function closeLightbox() {
@@ -866,23 +970,16 @@ function changeLightboxImage(dir) {
 
     if (!img || !lightboxContent) return;
 
-    // Reset loader state
-    lightboxContent.classList.remove('loaded');
-    img.style.display = 'none'; // Hide image until loaded
-
     img.src = lightboxImages[lightboxIndex];
-    img.onload = () => { lightboxContent.classList.add('loaded'); img.style.display = 'block'; };
-    img.onerror = () => { lightboxContent.classList.add('loaded'); img.style.display = 'block'; }; // Show broken image icon on error
+    img.onload = () => { img.style.display = 'block'; };
+    img.onerror = () => { img.style.display = 'block'; }; // Show broken image icon on error
 
     updateLightboxUI();
 }
 
 function updateLightboxUI() {
-    const counter = document.getElementById('lightbox-counter');
     const prev = document.getElementById('lightbox-prev');
     const next = document.getElementById('lightbox-next');
-    
-    if (counter) counter.innerText = `${lightboxIndex + 1} / ${lightboxImages.length}`;
     
     const showNav = lightboxImages.length > 1;
     if (prev) prev.style.display = showNav ? 'block' : 'none';
