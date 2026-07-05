@@ -639,21 +639,6 @@ function initProductPage() {
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', `Buy ${p.name} for Rs. ${p.price.toLocaleString()} at Shahab Mobile Mansehra. ${p.description}`);
 
-    // Update Open Graph and Twitter Card meta tags for better sharing
-    const productUrl = window.location.href;
-    const imageUrl = window.location.origin + p.images[0].replace('./', '/');
-    const shareTitle = `${p.name} - Rs. ${p.price.toLocaleString()}`;
-    const shareDesc = `Official Warranty ✓ Easy Installments ✓ Click to see details for ${p.name} at Shahab Mobile.`;
-
-    document.querySelector('meta[property="og:title"]')?.setAttribute('content', shareTitle);
-    document.querySelector('meta[property="twitter:title"]')?.setAttribute('content', shareTitle);
-    document.querySelector('meta[property="og:description"]')?.setAttribute('content', shareDesc);
-    document.querySelector('meta[property="twitter:description"]')?.setAttribute('content', shareDesc);
-    document.querySelector('meta[property="og:image"]')?.setAttribute('content', imageUrl);
-    document.querySelector('meta[property="twitter:image"]')?.setAttribute('content', imageUrl);
-    document.querySelector('meta[property="og:url"]')?.setAttribute('content', productUrl);
-    document.querySelector('link[rel="canonical"]')?.setAttribute('href', productUrl);
-
 
     // Dynamic Structured Data for SEO (Product Schema)
     const productSchema = {
