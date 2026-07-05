@@ -353,18 +353,18 @@
         window.filterOnlyInstallments = true;
     </script>
     <script src="app.js"></script>
+    <!--
+        Yeh script ab app.js load honay ke foran baad chalega.
+        Yeh pehle banner text update karega aur phir sirf installment walay products render karega.
+    -->
     <script>
-        // Update banner text from config in products.js
         if (typeof installmentConfig !== 'undefined') {
             document.getElementById('inst-banner-desc').innerText = installmentConfig.bannerDescription;
             document.getElementById('inst-advance-text').innerText = installmentConfig.advanceText;
             document.getElementById('inst-plans-text').innerText = installmentConfig.planSummary;
         }
-
-        // We need to trigger render because DOMContentLoaded might have already fired
-        if (typeof renderProducts === 'function') {
-            renderProducts();
-        }
+        renderProducts(true, false);
+        hideLoadingScreen();
     </script>
 </body>
 </html>

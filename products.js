@@ -185,6 +185,7 @@ const products = [
         description: "Stay ahead with the Redmi Note 15, offering flagship-level features at an incredible price point.",
         images: ["./images/redmi-note-15.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        offerEndDate: "2026-07-10T23:59:59", // Offer ends on this date
         stock: 5,
         freeDelivery: true,
         badge: { text: "TOP DEAL", color: "bg-red-600" }
@@ -197,6 +198,7 @@ const products = [
         description: "The ultimate Redmi experience. Pro cameras, pro performance, and an elegant premium design.",
         images: ["./images/Redmi-note-15-pro-blue.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        offerEndDate: "2026-07-08T23:59:59",
         stock: 3,
         freeDelivery: true
     },
@@ -710,6 +712,18 @@ const products = [
         images: ["./images/samsung-a56-5g.avif"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
         stock: 8,
+        freeDelivery: true
+    },
+    {
+        id: 72,
+        name: "Infinix Smart 20 (4GB-64GB)",
+        brand: "Infinix",
+        price: 33999,
+        description: "Reliable performance with premium build quality.",
+        images: ["./images/infinix-smart-20.jpg"],
+        specs: { ram: "4GB", storage: "64GB", battery: "5200 mAh" },
+        stock: 8,
+        installment: true,
         freeDelivery: true
     }
 ];

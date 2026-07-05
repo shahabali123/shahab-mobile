@@ -31,8 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Only render grid if we are on index/offers/installments (main product listing pages)
     if (document.getElementById('product-grid')) {
-        renderProducts(true, false);
-        hideLoadingScreen();
+        // renderProducts is now called from specific pages like index.html or installments.html to ensure filters are set.
     } else if (document.getElementById('product-page-content')) {
         initProductPage();
         hideLoadingScreen();
@@ -104,6 +103,16 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
                 ${product.freeDelivery ? '<span class="bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg shadow-green-100">FREE DELIVERY</span>' : ''}
                 ${product.installment ? '<span class="bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1"><i class="fas fa-calendar-alt text-[8px]"></i> Installment</span>' : ''}
                 ${product.installmentText ? `<span class="bg-indigo-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">${product.installmentText}</span>` : ''}
+                ${product.offerEndDate ? `
+                    <div id="timer-${product.id}" class="flex items-center gap-1 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg bg-red-500/80 backdrop-blur-sm border border-white/20">
+                        <i class="fas fa-stopwatch animate-pulse"></i>
+                        <span class="countdown-text"></span>
+                    </div>
+                    <script>
+                        // Chota timer product card k liye
+                        startCountdown("${product.offerEndDate}", "timer-${product.id}", true);
+                    </script>
+                ` : ''}
             </div>
             <div class="aspect-square bg-slate-50 rounded-2xl mb-5 flex items-center justify-center overflow-hidden loading-image-container">
                 <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
@@ -694,6 +703,15 @@ function initProductPage() {
                 <span class="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 w-fit">${p.brand}</span>
                 <h2 class="text-4xl md:text-5xl font-black mb-4 text-slate-900">${p.name}</h2>
                 <p class="text-3xl font-bold text-blue-600 mb-8">Rs. ${p.price.toLocaleString()}</p>
+
+                ${p.offerEndDate ? `
+                    <div class="mb-8 p-4 bg-red-50 rounded-2xl border border-red-100 flex items-center justify-between gap-4">
+                        <h4 class="font-bold text-red-700 flex items-center gap-3"><i class="fas fa-stopwatch animate-pulse"></i> Offer Ends In:</h4>
+                        <div id="product-page-timer" class="flex items-center gap-1 text-red-700 font-bold text-lg">
+                            <!-- Timer will be injected here -->
+                        </div>
+                    </div>
+                ` : ''}
                 
                 <div class="grid grid-cols-3 gap-4 mb-8">
                     <div class="bg-slate-50 p-4 rounded-2xl text-center"><p class="text-[10px] text-slate-400 font-bold uppercase">RAM</p><p class="font-bold">${p.specs.ram}</p></div>
@@ -747,6 +765,11 @@ function initProductPage() {
             </div>
         </div>
     `;
+
+    // Start countdown on product page if offer exists
+    if (p.offerEndDate) {
+        startCountdown(p.offerEndDate, 'product-page-timer', true);
+    }
 
     // Render Related Products
     const relatedProductsGrid = document.getElementById('related-products-grid');
@@ -1071,4 +1094,45 @@ function renderPagination(totalItems) {
         html += `<button onclick="currentPage=${i}; renderProducts(false, true);" class="w-10 h-10 rounded-xl font-bold transition ${currentPage === i ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-blue-600 focus:border-blue-600'}">${i}</button>`;
     }
     container.innerHTML = html;
+}
+
+/**
+ * Starts a countdown timer that updates an element.
+ * @param {string} endTimeString - The ISO 8601 string for the end time.
+ * @param {string} elementId - The ID of the element to update.
+ * @param {boolean} isCompact - If true, shows a compact version (e.g., 2d 5h 30m).
+ */
+function startCountdown(endTimeString, elementId, isCompact = false) {
+    const countdownElement = document.getElementById(elementId);
+    if (!countdownElement) return;
+
+    const endTime = new Date(endTimeString).getTime();
+
+    const timerInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+
+        if (distance < 0) {
+            clearInterval(timerInterval);
+            countdownElement.innerHTML = "Offer Expired!";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        if (isCompact) {
+            const textEl = countdownElement.querySelector('.countdown-text');
+            if (textEl) textEl.innerText = `${days}d ${hours}h ${minutes}m left`;
+        } else {
+            countdownElement.innerHTML = `
+                <span class="bg-white/20 text-white font-black text-xl md:text-2xl p-2 rounded-lg w-16 text-center">${hours.toString().padStart(2, '0')}</span>
+                <span class="text-white/50 text-2xl">:</span>
+                <span class="bg-white/20 text-white font-black text-xl md:text-2xl p-2 rounded-lg w-16 text-center">${minutes.toString().padStart(2, '0')}</span>
+                <span class="text-white/50 text-2xl">:</span>
+                <span class="bg-white/20 text-white font-black text-xl md:text-2xl p-2 rounded-lg w-16 text-center">${seconds.toString().padStart(2, '0')}</span>`;
+        }
+    }, 1000);
 }

@@ -158,6 +158,16 @@
             <h2 class="text-3xl md:text-5xl font-black text-slate-900 mb-4">Hot Offers & Deals 🔥</h2>
             <p class="text-slate-500 max-w-2xl">Get the best prices and exclusive free delivery on these top models.</p>
         </div>
+        <!-- Countdown Banner -->
+        <div class="col-span-full bg-gradient-to-r from-red-600 to-orange-500 rounded-[2rem] p-8 md:p-12 text-white mb-8 shadow-2xl shadow-red-200 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="text-center md:text-left">
+                <h3 class="text-3xl font-black mb-2">Limited Time Deals!</h3>
+                <p class="text-white/80">Yeh offers jald khatam ho jayengi, faida uthayein!</p>
+            </div>
+            <div id="offer-countdown-timer" class="flex items-center gap-2">
+                <!-- Timer JS se yahan inject hoga -->
+            </div>
+        </div>
         <main class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="product-grid">
             <!-- Products injected via JS -->
         </main>
@@ -277,8 +287,13 @@
     <script src="app.js"></script>
     <script>
         // Custom filter for Offers Page
-        window.filterOnlyOffers = true;
-        renderProducts(true, false);
+        // Yeh script ab DOM poora load honay ke baad chalega takay koi error na aye.
+        document.addEventListener('DOMContentLoaded', () => {
+            window.filterOnlyOffers = true;
+            startCountdown("2026-07-10T23:59:59", "offer-countdown-timer");
+            renderProducts(true, false);
+            hideLoadingScreen();
+        });
     </script>
 </body>
 </html>
