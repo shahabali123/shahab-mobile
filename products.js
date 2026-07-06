@@ -304,7 +304,7 @@ const products = [
         id: 37,
         name: "Itel City 200 (4GB-128GB)",
         brand: "Itel",
-        price: 31499,
+        price: 33999,
         description: "Itel City 200 features a massive display and generous 128GB storage for your media needs.",
         images: ["./images/itel-city-200.webp"],
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
