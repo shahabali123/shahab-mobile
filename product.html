@@ -6,7 +6,7 @@
     <title>Product Details | Shahab Mobile</title>
     <link rel="manifest" href="manifest.json">
     <meta name="description" content="Explore details for mobile phones available at Shahab Mobile Mansehra.">
-    <link rel="icon" href="./images/logo.png" type="image/png">
+    <link rel="icon" href="/images/logo.png" type="image/png">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="product">
@@ -102,7 +102,7 @@
             right: 20px;
             width: 50px;
             height: 50px;
-            background-image: url('./images/logo.png');
+            background-image: url('/images/logo.png');
             background-size: cover;
             border-radius: 50%;
             opacity: 0.5;
@@ -117,7 +117,7 @@
     <div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="relative flex items-center justify-center">
             <div class="loader-ring"></div>
-            <img src="./images/logo.png" class="absolute w-12 h-12 rounded-2xl object-contain shadow-sm">
+            <img src="/images/logo.png" class="absolute w-12 h-12 rounded-2xl object-contain shadow-sm">
         </div>
         <p class="text-slate-400 font-bold mt-4 animate-pulse tracking-wide">Loading Product Details...</p>
     </div>
@@ -127,7 +127,7 @@
         <div class="container mx-auto px-4 md:px-8">
             <div class="flex flex-wrap lg:flex-nowrap justify-between items-center gap-y-3">
                 <div class="flex items-center gap-3 group cursor-pointer shrink-0" onclick="window.location.href='index.html'">
-                    <img src="./images/logo.png" alt="Shahab Mobile Logo" class="w-12 h-12 object-contain group-hover:rotate-12 transition-transform">
+                    <img src="/images/logo.png" alt="Shahab Mobile Logo" class="w-12 h-12 object-contain group-hover:rotate-12 transition-transform">
                     <h1 class="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900">SHAHAB<span class="text-blue-600">MOBILE</span></h1>
                 </div>
 
@@ -239,8 +239,8 @@
     <footer class="bg-slate-900 text-white pt-16 pb-8 mt-20">
         <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div class="col-span-1 md:col-span-1">
-                <div class="flex items-center gap-2 mb-6">
-                    <img src="./images/logo.png" alt="Logo" class="w-10 h-10 object-contain">
+                <div class="flex items-center gap-3 mb-6">
+                    <img src="/images/logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-lg">
                     <h2 class="text-xl font-bold uppercase tracking-wider">Shahab Mobile</h2>
                 </div>
                 <p class="text-slate-400 leading-relaxed mb-6">Apki pasandida mobile shop jahan apko milte hain original products aur behtreen qeemat.</p>
@@ -276,16 +276,12 @@
         </div>
     </footer>
 
-    <script src="products.js"></script>
-    <script src="app.js"></script>
+    <script src="products.js"></script> <!-- Product data pehle -->
+    <script src="app.js"></script> <!-- Functions baad mein -->
     <script>
-        // Initialize specifically for product page
-        document.addEventListener('DOMContentLoaded', () => {
-            initProductPage();
-            // Observe elements for scroll reveal after related products are rendered
-            initScrollReveal(); // Ensure this is initialized
-            observeElements(); // Observe newly added related product cards
-        });
+        initApp(); // App ko initialize karein
+        initProductPage(); // Product page render karein
+        hideLoadingScreen(); // Loading screen hatayein
     </script>
 </body>
 </html>

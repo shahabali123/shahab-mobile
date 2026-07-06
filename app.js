@@ -23,27 +23,7 @@ function hideLoadingScreen() {
     }
 }
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    updateCartCount();
-    updateCompareUI();
-    initScrollReveal();
-    
-    // Only render grid if we are on index/offers/installments (main product listing pages)
-    if (document.getElementById('product-grid')) {
-        // renderProducts is now called from specific pages like index.html or installments.html to ensure filters are set.
-    } else if (document.getElementById('product-page-content')) {
-        initProductPage();
-        hideLoadingScreen();
-    }
-
-    // Close suggestions when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.group')) {
-            document.getElementById('search-suggestions')?.classList.add('hidden');
-        }
-    });
-
+function initApp() {
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -71,6 +51,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.group')) {
+            document.getElementById('search-suggestions')?.classList.add('hidden');
+        }
+    });
+
+    initScrollReveal();
+
     // Keyboard support for Lightbox
     document.addEventListener('keydown', (e) => {
         const lightbox = document.getElementById('lightbox-modal');
@@ -80,7 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Escape') closeLightbox();
         }
     });
-});
+
+    updateCartCount(); // This also calls renderCart()
+}
 
 /**
  * Generates the HTML for a single product card.
@@ -108,15 +99,11 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
                         <i class="fas fa-stopwatch animate-pulse"></i>
                         <span class="countdown-text"></span>
                     </div>
-                    <script>
-                        // Chota timer product card k liye
-                        startCountdown("${product.offerEndDate}", "timer-${product.id}", true);
-                    </script>
                 ` : ''}
             </div>
             <div class="aspect-square bg-slate-50 rounded-2xl mb-5 flex items-center justify-center overflow-hidden loading-image-container">
                 <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
-                <img src="${product.images[0]}" class="w-4/5 h-4/5 object-contain group-hover:scale-110 transition duration-500" onload="this.parentElement.classList.add('loaded');">
+                <img data-src="${product.images[0]}" class="w-4/5 h-4/5 object-contain group-hover:scale-110 transition duration-500 product-card-image">
                 <div class="watermark-logo"></div>
             </div>
             <p class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-1">${product.brand}</p>
@@ -212,6 +199,14 @@ function renderProducts(resetPage = false, shouldScroll = false) {
     grid.innerHTML = paginated.map(product => createProductCardHtml(product, window.filterOnlyInstallments)).join('');
 
     renderPagination(filtered.length);
+
+    // Initialize all countdown timers after rendering the grid
+    paginated.forEach(product => {
+        if (product.offerEndDate) {
+            startCountdown(product.offerEndDate, `timer-${product.id}`, true);
+        }
+    });
+
     observeElements();
 
     // Scroll to product grid if requested
@@ -970,7 +965,20 @@ function initScrollReveal() {
     revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                // Animate the card
                 entry.target.classList.add('reveal-active');
+
+                // Find the image inside and load it
+                const img = entry.target.querySelector('.product-card-image');
+                if (img && img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src'); // Load only once
+                    img.onload = () => {
+                        img.parentElement.classList.add('loaded');
+                    };
+                }
+                // Stop observing once revealed
+                revealObserver.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1 });

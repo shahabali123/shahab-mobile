@@ -5,7 +5,7 @@ const heroConfig = {
     brandName: "SHAHAB MOBILE",
     title: "Premium Devices. <br> Trusted Quality.",
     description: "Mansehra's leading destination for original Phones, Samsung, and top brands. Official warranty and easy installments on Shinkiari Road.",
-    image: "./images/logo.png",
+    image: "/images/logo.png",
     primaryBtn: { text: "Explore Collection", link: "#product-grid" },
     secondaryBtn: { text: "Latest Offers", link: "offers.html" }, 
     installmentBtn: { text: "Easy Installments", link: "installments.html" }, // Added new button for Installments
@@ -47,7 +47,7 @@ function renderHero() {
                 <div class="relative group">
                     <div class="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px] animate-pulse"></div>
                     <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] animate-pulse"></div>
-                    <img src="${heroConfig.image}" alt="Shahab Mobile Featured" class="relative z-20 w-full max-w-lg h-auto rounded-[3rem] shadow-2xl animate-float-3d border border-white/10">
+                    <img src="${heroConfig.image}" alt="Shahab Mobile Featured" class="relative z-20 w-full max-w-lg h-auto rounded-[3rem] shadow-2xl animate-float-3d border border-white/10" fetchpriority="high">
                 </div>
             </div>
 
@@ -59,4 +59,4 @@ function renderHero() {
 }
 
 // Initialize hero section
-document.addEventListener('DOMContentLoaded', renderHero);
+// renderHero ab HTML file se direct call hoga.
