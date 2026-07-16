@@ -163,6 +163,11 @@ function renderProducts(resetPage = false, shouldScroll = false) {
         filtered = filtered.filter(p => p.installment === true);
     }
 
+    // Apply Gadgets Filter (if on gadgets page)
+    if (window.filterOnlyGadgets) {
+        filtered = filtered.filter(p => p.category === 'Gadget');
+    }
+
     // Apply Sorting
     const sortVal = document.getElementById('sortFilter')?.value;
     if (sortVal === 'low') {

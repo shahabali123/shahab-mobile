@@ -753,4 +753,17 @@ const products = [
         freeDelivery: true,
         installment: true,
         },
+        {
+            id: 75,
+            name: "12V Router Power Bank UPS",
+            brand: "Gadget",
+            category: "Gadget",
+            price: 2499,
+            description: "High-Power 12V Router Power Bank banaye rakhe aapka internet har waqt ON! Ye specially designed Router UPS Power Bank hai jo aapke WiFi Router, ONT, Fiber Modem ya CCTV ko 6 se 10 ghantay tak ka backup deta hai. Light shedding ya bijli jane par bhi aapka internet uninterrupted chalta rahega. Plug & Play design ke sath bilkul easy to use – koi complex setup nahi chahiye. Perfect for PTCL, StormFiber, Nayatel, Optix, aur doosre 12V routers.",
+            images: ["/images/router-power-bank.jpeg"],
+            specs: { ram: "N/A", storage: "N/A", battery: "2500 mAh" },
+            stock: 25,
+            freeDelivery: true,
+            badge: { text: "ESSENTIAL", color: "bg-teal-500" }
+        },
 ];

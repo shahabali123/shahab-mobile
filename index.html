@@ -180,11 +180,12 @@
                         <a href="index.html" class="hover:text-blue-600 transition text-blue-600 border-b-2 border-blue-600">Home</a>
                         <a href="offers.html" class="hover:text-blue-600 transition">Offers</a>
                         <a href="installments.html" class="hover:text-blue-600 transition">Installments</a>
+                        <a href="gadgets.html" class="hover:text-blue-600 transition">Gadgets</a>
                     </div>
                     
                     <!-- Mobile Filter Toggle -->
                     <button onclick="toggleFilters()" class="p-2 hover:bg-slate-100 rounded-full transition text-slate-700">
-                        <i class="fas fa-filter lg:hidden text-xl focus:text-blue-600"></i>
+                        <i class="fas fa-filter lg:hidden text-xl"></i>
                         <span class="hidden lg:flex items-center gap-2 font-bold"><i class="fas fa-sliders-h text-sm"></i> Filters</span>
                     </button>
                     
@@ -213,6 +214,7 @@
                     <a href="index.html" class="flex items-center gap-4 text-blue-600 p-3 bg-blue-50 rounded-2xl"><i class="fas fa-home w-6"></i> Home</a>
                     <a href="offers.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-tags w-6"></i> Latest Offers</a>
                     <a href="installments.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-calendar-alt w-6"></i> Installment Plans</a>
+                    <a href="gadgets.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-plug w-6"></i> Gadgets</a>
                     <div class="h-[1px] bg-slate-100 my-2"></div>
                     <a href="index.html#product-grid" onclick="toggleMobileMenu()" class="flex items-center gap-4 hover:text-blue-600 transition p-3 text-base"><i class="fas fa-th-large w-6"></i> Our Collection</a>
                 </div>
@@ -229,6 +231,7 @@
                         <option value="Vgotel">Vgotel</option>
                         <option value="Itel">Itel</option>
                         <option value="Infinix">Infinix</option>
+                        <option value="Gadget">Gadget</option>
                     </select>
                     <select id="sortFilter" onchange="renderProducts(true, true)" class="bg-slate-50 border border-slate-200 p-3 rounded-xl outline-none font-semibold text-slate-600 cursor-pointer">
                         <option value="default">Default Sorting</option>
