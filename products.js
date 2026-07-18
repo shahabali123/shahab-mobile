@@ -765,5 +765,17 @@ const products = [
             stock: 25,
             freeDelivery: true,
             badge: { text: "ESSENTIAL", color: "bg-teal-500" }
+        },        {
+            id: 76,
+            name: "Samsung 45W PD Adapter",
+            brand: "Gadget",
+            category: "Gadget",
+            price: 1499,
+            description: "45W ultra fast charging with samsung travel adapter.",
+            images: ["/images/samsung-45w-pd-adapter.jpeg"],
+            specs: { ram: "N/A", storage: "N/A", battery: "2500 mAh" },
+            stock: 25,
+            freeDelivery: true,
+            badge: { text: "ESSENTIAL", color: "bg-teal-500" }
         },
 ];
