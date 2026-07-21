@@ -21,6 +21,18 @@ const installmentConfig = {
 const products = [
     {
         id: 13,
+        name: "Samsung A55 5g (8GB-256GB)",
+        brand: "Samsung",
+        price: 139999,
+        description: "Samsung Galaxy A55 5G delivers a premium experience with its vibrant 6.6-inch Super AMOLED display, powerful Exynos performance, and advanced triple-camera system for smooth everyday use and stunning photography.",
+        images: ["/images/samsung-galaxy-a55-5g.avif"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 10,
+        freeDelivery: true,
+        badge: { text: "NEW", color: "bg-blue-600" }
+    },
+    {
+        id: 13,
         name: "Samsung A07 (4GB-64GB)",
         brand: "Samsung",
         price: 37500,
