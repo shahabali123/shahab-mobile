@@ -404,7 +404,7 @@
                     <li><a href="offers.html" class="hover:text-white transition">Latest Offers</a></li>
                     <li><a href="installments.html" class="hover:text-white transition">Installment Plans</a></li>
                     <li><a href="#product-grid" class="hover:text-white transition">Our Collection</a></li>
-                    <li><a href="#" class="hover:text-white transition">Track Order</a></li>
+                    <!-- <li><a href="#" class="hover:text-white transition">Track Order</a></li> -->
                 </ul>
             </div>
             <div>
@@ -431,6 +431,16 @@
         initApp(); // App ko initialize karein
         renderHero(); // Hero section render karein
         
+        // Check for search query from other pages
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('search');
+        if (searchQuery) {
+            const searchBar = document.getElementById('searchBar');
+            if (searchBar) {
+                searchBar.value = decodeURIComponent(searchQuery);
+            }
+        }
+
         // Check if we are returning from a product page
         const savedPage = sessionStorage.getItem('shahab_last_page');
         if (savedPage) {

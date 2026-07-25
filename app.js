@@ -852,16 +852,20 @@ function shareProduct(productId) {
     const shareTitle = `${p.name} - Rs. ${p.price.toLocaleString()}`;
 
     if (navigator.share) {
-        // Mobile share: Only share the URL to force social media apps
-        // to generate a preview card from the link's meta tags.
+        // Use Web Share API on mobile
         navigator.share({
             url: shareUrl
         });
     } else {
-        // Fallback for desktop browsers: Open WhatsApp with a clean title and the link.
-        const whatsappText = `${shareTitle}\n${shareUrl}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(whatsappText)}`, '_blank');
-        showToast("WhatsApp share opened. Link copied to clipboard!", "info");
+        // Fallback for desktop: Copy link to clipboard
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            showToast("Product link copied to clipboard!", "info");
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            // If clipboard fails, open WhatsApp as a last resort
+            const whatsappText = `${shareTitle}\n${shareUrl}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(whatsappText)}`, '_blank');
+        });
     }
 }
 
