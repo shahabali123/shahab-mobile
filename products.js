@@ -18,19 +18,23 @@ const installmentConfig = {
         { months: 9, markup: 54 } // 9 mahine k plan pe total 54% markup
     ]
 };
+
+// Helper function to generate URL-friendly slugs
+function generateSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/\+/g, '-plus') // '+' ko '-plus' se badal dein
+        .replace(/\s+/g, '-')   // spaces ko '-' se badal dein
+        .replace(/[()]/g, '');  // brackets hata dein
+}
+
+// =================================================================================
+// Products List
+// =================================================================================
 const products = [
-    {
-        id: 13,
-        name: "Samsung A55 5g (8GB-256GB)",
-        brand: "Samsung",
-        price: 139999,
-        description: "Samsung Galaxy A55 5G delivers a premium experience with its vibrant 6.6-inch Super AMOLED display, powerful Exynos performance, and advanced triple-camera system for smooth everyday use and stunning photography.",
-        images: ["/images/samsung-galaxy-a55-5g.avif"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 10,
-        freeDelivery: true,
-        badge: { text: "NEW", color: "bg-blue-600" }
-    },
+    // =================================================================================
+    // Samsung
+    // =================================================================================
     {
         id: 13,
         name: "Samsung A07 (4GB-64GB)",
@@ -40,8 +44,7 @@ const products = [
         images: ["/images/samsung-a07.avif"],
         specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
         stock: 10,
-        freeDelivery: true,
-        badge: { text: "NEW", color: "bg-blue-600" }
+        freeDelivery: true
     },
     {
         id: 14,
@@ -52,8 +55,7 @@ const products = [
         images: ["/images/samsung-a07.avif"],
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
         stock: 10,
-        freeDelivery: true,
-        badge: { text: "BEST SELLER", color: "bg-emerald-500" }
+        freeDelivery: true
     },
     {
         id: 15,
@@ -97,8 +99,40 @@ const products = [
         images: ["/images/samsung-a26-5g.avif"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
         stock: 4,
-        freeDelivery: true,
-        badge: { text: "HOT", color: "bg-orange-500" }
+        freeDelivery: true
+    },
+    {
+        id: 71,
+        name: "Samsung A56 5G (8GB-256GB)",
+        brand: "Samsung",
+        price: 124000,
+        description: "Reliable 5G performance with premium build quality.",
+        images: ["/images/samsung-a56-5g.avif"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 8,
+        freeDelivery: true
+    },
+    {
+        id: 91, // Changed from 13 to avoid conflict
+        name: "Samsung A55 5g (8GB-256GB)",
+        brand: "Samsung",
+        price: 139999,
+        description: "Samsung Galaxy A55 5G delivers a premium experience with its vibrant 6.6-inch Super AMOLED display, powerful Exynos performance, and advanced triple-camera system for smooth everyday use and stunning photography.",
+        images: ["/images/samsung-galaxy-a55-5g.avif"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 10,
+        freeDelivery: true
+    },
+    {
+        id: 58,
+        name: "Samsung A37 (8GB-256GB)",
+        brand: "Samsung",
+        price: 149999,
+        description: "A mid-range masterpiece with flagship features and long-term software support.",
+        images: ["/images/samsung-a37.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 4,
+        freeDelivery: true
     },
     {
         id: 19,
@@ -111,6 +145,43 @@ const products = [
         stock: 3,
         freeDelivery: true
     },
+    {
+        id: 46,
+        name: "Samsung A57 (12GB-512GB)",
+        brand: "Samsung",
+        price: 215500,
+        description: "Premium A-series experience with massive storage and high-end multitasking capabilities.",
+        images: ["/images/samsung-a57.jpg"],
+        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
+        stock: 5,
+        freeDelivery: true
+    },
+    {
+        id: 59,
+        name: "Samsung S26 Plus (12GB-512GB)",
+        brand: "Samsung",
+        price: 405000,
+        description: "The perfect balance of size and power in the S26 series.",
+        images: ["/images/samsung-s26-plus.webp"],
+        specs: { ram: "12GB", storage: "512GB", battery: "4900 mAh" },
+        stock: 3,
+        freeDelivery: true
+    },
+    {
+        id: 45,
+        name: "Samsung S26 Ultra (12GB-512GB)",
+        brand: "Samsung",
+        price: 489999,
+        description: "The pinnacle of Samsung engineering. Unmatched camera performance and the fastest processor.",
+        images: ["/images/samsung-s26-ultra.jpg"],
+        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
+        stock: 2,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // Redmi
+    // =================================================================================
     {
         id: 20,
         name: "Redmi A5 (4GB-64GB)",
@@ -153,8 +224,7 @@ const products = [
         images: ["/images/redmi-note-14.webp"],
         specs: { ram: "8GB", storage: "128GB", battery: "5000 mAh" },
         stock: 7,
-        freeDelivery: true,
-        badge: { text: "POPULAR", color: "bg-purple-600" }
+        freeDelivery: true
     },
     {
         id: 24,
@@ -165,17 +235,6 @@ const products = [
         images: ["/images/redmi-note-14.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
         stock: 5,
-        freeDelivery: true
-    },
-    {
-        id: 25,
-        name: "Redmi Note 14 Pro (8GB-256GB)",
-        brand: "Redmi",
-        price: 78000,
-        description: "Experience Pro performance with advanced AI camera features and ultra-fast charging on Redmi Note 14 Pro.",
-        images: ["/images/redmi-note-14-pro.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 4,
         freeDelivery: true
     },
     {
@@ -199,8 +258,18 @@ const products = [
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
         offerEndDate: "2026-07-10T23:59:59", // Offer ends on this date
         stock: 5,
-        freeDelivery: true,
-        badge: { text: "TOP DEAL", color: "bg-red-600" }
+        freeDelivery: true
+    },
+    {
+        id: 25,
+        name: "Redmi Note 14 Pro (8GB-256GB)",
+        brand: "Redmi",
+        price: 78000,
+        description: "Experience Pro performance with advanced AI camera features and ultra-fast charging on Redmi Note 14 Pro.",
+        images: ["/images/redmi-note-14-pro.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 4,
+        freeDelivery: true
     },
     {
         id: 28,
@@ -215,6 +284,21 @@ const products = [
         freeDelivery: true
     },
     {
+        id: 70,
+        name: "Redmi Note 15 Pro (12GB-256GB)",
+        brand: "Redmi",
+        price: 108500,
+        description: "The ultimate power user's Redmi. Massive RAM and pro-level features.",
+        images: ["/images/Redmi-note-15-pro-blue.webp"],
+        specs: { ram: "12GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 4,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // Tecno
+    // =================================================================================
+    {
         id: 29,
         name: "Tecno Spark Go 3 (4GB-64GB)",
         brand: "Tecno",
@@ -224,8 +308,43 @@ const products = [
         specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
         stock: 20,
         freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 68,
+        name: "Tecno Spark Go 3 (4GB-128GB)",
+        brand: "Tecno",
+        price: 37999,
+        description: "The popular Spark Go 3 now with doubled storage for more apps and photos.",
+        images: ["/images/tecno-spark-go-3.webp"],
+        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 15,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 73,
+        name: "Tecno Spark 40 (6GB-128GB)",
+        brand: "Tecno",
+        price: 50999,
+        description: "Stylish design with powerful specs. The Spark 40 features a massive display and excellent cameras.",
+        images: ["/images/tecno-spark-40.webp", "/images/tecno-spark-40-blue.webp"],
+        specs: { ram: "6GB", storage: "128GB", battery: "5200 mAh" },
+        stock: 10,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 41,
+        name: "Tecno Spark 50 (6GB-128GB)",
+        brand: "Tecno",
+        price: 54999,
+        description: "Compact and reliable, the Tecno Spark 50 is an ideal choice for essential smartphone needs.",
+        images: ["/images/tecno-spark-50.webp"],
+        specs: { ram: "6GB", storage: "128GB", battery: "7000 mAh" },
+        stock: 10,
         installment: true,
-        installmentText: "20% Advance, 9 Months Installments"
+        freeDelivery: false
     },
     {
         id: 30,
@@ -237,8 +356,7 @@ const products = [
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
         stock: 10,
         freeDelivery: true,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments"
+        installment: true
     },
     {
         id: 31,
@@ -250,9 +368,36 @@ const products = [
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
         stock: 8,
         freeDelivery: true,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments"
+        installment: true
     },
+    {
+        id: 74,
+        name: "Tecno Camon 50 (8GB-256GB)",
+        brand: "Tecno",
+        price: 94999,
+        description: "Stylish design with powerful specs. The camon 50 features a massive 6.78 inch display and excellent 50mp cameras.",
+        images: ["/images/tecno-camon-50.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "6500 mAh" },
+        stock: 10,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 53,
+        name: "Tecno Camon 50 Pro (8GB-256GB)",
+        brand: "Tecno",
+        price: 104999,
+        description: "Professional camera features in your pocket. The Camon 50 Pro excels in low-light photography.",
+        images: ["/images/tecno-camon-50pro.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 6,
+        installment: true,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // Vgotel
+    // =================================================================================
     {
         id: 32,
         name: "Vgotel New 15 Pro (4GB-64GB)",
@@ -275,6 +420,10 @@ const products = [
         stock: 15,
         freeDelivery: true
     },
+
+    // =================================================================================
+    // Itel
+    // =================================================================================
     {
         id: 34,
         name: "Itel P17 Pro (2GB-32GB 3G)",
@@ -296,8 +445,7 @@ const products = [
         specs: { ram: "2GB", storage: "64GB", battery: "5000 mAh" },
         stock: 18,
         freeDelivery: true,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments"
+        installment: true
     },
     {
         id: 36,
@@ -309,34 +457,7 @@ const products = [
         specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
         stock: 14,
         freeDelivery: true,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments"
-    },
-    {
-        id: 37,
-        name: "Itel City 200 (4GB-128GB)",
-        brand: "Itel",
-        price: 33999,
-        description: "Itel City 200 features a massive display and generous 128GB storage for your media needs.",
-        images: ["/images/itel-city-200.webp"],
-        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
-        stock: 9,
-        freeDelivery: true,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments"
-    },
-    {
-        id: 38,
-        name: "Itel Super 26 Ultra (8GB-256GB)",
-        brand: "Itel",
-        price: 62150,
-        description: "High performance meets high storage capacity. Itel Super 26 Ultra is the ultimate budget powerhouse.",
-        images: ["/images/itel-super-26-ultra.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 7,
-        freeDelivery: true,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments"
+        installment: true
     },
     {
         id: 39,
@@ -348,9 +469,36 @@ const products = [
         specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
         stock: 10,
         installment: true,
-        installmentText: "20% Advance, 9 Months Installments",
         freeDelivery: false
     },
+    {
+        id: 37,
+        name: "Itel City 200 (4GB-128GB)",
+        brand: "Itel",
+        price: 33999,
+        description: "Itel City 200 features a massive display and generous 128GB storage for your media needs.",
+        images: ["/images/itel-city-200.webp"],
+        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 9,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 38,
+        name: "Itel Super 26 Ultra (8GB-256GB)",
+        brand: "Itel",
+        price: 62150,
+        description: "High performance meets high storage capacity. Itel Super 26 Ultra is the ultimate budget powerhouse.",
+        images: ["/images/itel-super-26-ultra.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 7,
+        freeDelivery: true,
+        installment: true
+    },
+
+    // =================================================================================
+    // Infinix
+    // =================================================================================
     {
         id: 40,
         name: "Infinix Smart 10 (4+4GB-64GB)",
@@ -362,369 +510,6 @@ const products = [
         stock: 10,
         freeDelivery: false,
         badge: { text: "Discontinued", color: "bg-red-500" }
-    },
-    {
-        id: 41,
-        name: "Tecno Spark 50 (6GB-128GB)",
-        brand: "Tecno",
-        price: 54999,
-        description: "Compact and reliable, the Tecno Spark 50 is an ideal choice for essential smartphone needs.",
-        images: ["/images/tecno-spark-50.webp"],
-        specs: { ram: "6GB", storage: "128GB", battery: "7000 mAh" },
-        stock: 10,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments",
-        freeDelivery: false
-    },
-    {
-        id: 42,
-        name: "Infinix Hot 60i (6GB-128GB)",
-        brand: "Infinix",
-        price: 54999,
-        description: "The Infinix Hot 60i delivers smooth performance and a vibrant display, perfect for daily multitasking and media.",
-        images: ["/images/infinix-hot-60-i.jpg"],
-        specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
-        stock: 12,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments",
-        freeDelivery: true
-    },
-    {
-        id: 43,
-        name: "Infinix Note 50 (8GB-256GB)",
-        brand: "Infinix",
-        price: 74999,
-        description: "Experience flagship-level power with the Infinix Note 50. This special bundle includes a high-capacity powerbank for non-stop energy.",
-        images: ["/images/infinix-note-50.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 8,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments",
-        freeDelivery: true,
-        badge: { text: "+ POWERBANK", color: "bg-purple-600" }
-    },
-    {
-        id: 44,
-        name: "Infinix Hot 60 Pro+ (8GB-256GB)",
-        brand: "Infinix",
-        price: 74999,
-        description: "Experience flagship-level power with the Infinx Hot 60 Pro+.",
-        images: ["/images/infinix-hot-60-pro+.jpg"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 8,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments",
-        freeDelivery: true
-    },
-    {
-        id: 45,
-        name: "Samsung S26 Ultra (12GB-512GB)",
-        brand: "Samsung",
-        price: 489999,
-        description: "The pinnacle of Samsung engineering. Unmatched camera performance and the fastest processor.",
-        images: ["/images/samsung-s26-ultra.jpg"],
-        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
-        stock: 2,
-        freeDelivery: true,
-        badge: { text: "FLAGSHIP", color: "bg-purple-600" }
-    },
-    {
-        id: 46,
-        name: "Samsung A57 (12GB-512GB)",
-        brand: "Samsung",
-        price: 215500,
-        description: "Premium A-series experience with massive storage and high-end multitasking capabilities.",
-        images: ["/images/samsung-a57.jpg"],
-        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
-        stock: 5,
-        freeDelivery: true
-    },
-    {
-        id: 47,
-        name: "Oppo Reno 15 Pro (12GB-512GB)",
-        brand: "Oppo",
-        price: 229999,
-        description: "Elegant design meets pro-grade photography. The Reno 15 Pro is built for creators.",
-        images: ["/images/oppo-reno-15-pro.png"],
-        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
-        stock: 4,
-        freeDelivery: true,
-        badge: { text: "NEW ARRIVAL", color: "bg-blue-600" }
-    },
-    {
-        id: 48,
-        name: "Oppo A6s Pro (8GB-256GB)",
-        brand: "Oppo",
-        price: 95350,
-        description: "Powerful performance with a stunning display and ultra-fast charging capabilities.",
-        images: ["/images/oppo-a6s-pro.png"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 6,
-        freeDelivery: true
-    },
-    {
-        id: 49,
-        name: "Vivo V70 (12GB-512GB)",
-        brand: "Vivo",
-        price: 179999,
-        description: "Experience the next level of mobile videography with Vivo's flagship V70 series.",
-        images: ["/images/vivo-v70.png"],
-        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
-        stock: 3,
-        freeDelivery: true,
-        badge: { text: "PREMIUM", color: "bg-emerald-500" }
-    },
-    {
-        id: 50,
-        name: "Vivo Y31d (8GB-256GB)",
-        brand: "Vivo",
-        price: 79695,
-        description: "A perfect balance of style and substance, featuring a large battery and smooth UI.",
-        images: ["/images/vivo-y31d.jpg"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 7,
-        freeDelivery: true
-    },
-    {
-        id: 51,
-        name: "Realme 16 5G (8GB-256GB)",
-        brand: "Realme",
-        price: 126000,
-        description: "Ultra-fast 5G speeds with a high-refresh-rate display and powerful gaming processor.",
-        images: ["/images/realme-16-5g.jpg"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 5,
-        freeDelivery: true,
-        badge: { text: "5G READY", color: "bg-indigo-600" }
-    },
-    {
-        id: 52,
-        name: "Realme C85 (8GB-256GB)",
-        brand: "Realme",
-        price: 63305,
-        description: "The champion of budget phones. Massive storage and excellent battery life.",
-        images: ["/images/realme-c85.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 10,
-        freeDelivery: true
-    },
-    {
-        id: 53,
-        name: "Tecno Camon 50 Pro (8GB-256GB)",
-        brand: "Tecno",
-        price: 104999,
-        description: "Professional camera features in your pocket. The Camon 50 Pro excels in low-light photography.",
-        images: ["/images/tecno-camon-50pro.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 6,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments",
-        freeDelivery: true
-    },
-    {
-        id: 54,
-        name: "Infinix Note 60 Pro (8GB-256GB)",
-        brand: "Infinix",
-        price: 115999,
-        description: "Pushing the boundaries of mid-range power with a beautiful curved display.",
-        images: ["/images/infinix-note-60-pro.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 5,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments",
-        freeDelivery: true
-    },
-    {
-        id: 55,
-        name: "Honor X6c (6GB-256GB)",
-        brand: "Honor",
-        price: 43670,
-        description: "Reliable performance and elegant design from Honor's latest X-series.",
-        images: ["/images/honor-x6c.png"],
-        specs: { ram: "6GB", storage: "256GB", battery: "5200 mAh" },
-        stock: 8,
-        freeDelivery: true
-    },
-    {
-        id: 56,
-        name: "ZTE V80 Pro (8GB-256GB)",
-        brand: "ZTE",
-        price: 45430,
-        description: "High-end specs at an entry-level price point. ZTE's powerhouse for daily users.",
-        images: ["/images/zte-v80-pro.jpg"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 10,
-        freeDelivery: true
-    },
-    {
-        id: 57,
-        name: "Digit 8 (3GB-64GB)",
-        brand: "Digit",
-        price: 20650,
-        description: "Essential smartphone features for everyone. Compact, reliable, and affordable.",
-        images: ["/images/digit-8.webp"],
-        specs: { ram: "3GB", storage: "64GB", battery: "4000 mAh" },
-        stock: 15,
-        freeDelivery: false
-    },
-    {
-        id: 58,
-        name: "Samsung A37 (8GB-256GB)",
-        brand: "Samsung",
-        price: 149999,
-        description: "A mid-range masterpiece with flagship features and long-term software support.",
-        images: ["/images/samsung-a37.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 4,
-        freeDelivery: true
-    },
-    {
-        id: 59,
-        name: "Samsung S26 Plus (12GB-512GB)",
-        brand: "Samsung",
-        price: 405000,
-        description: "The perfect balance of size and power in the S26 series.",
-        images: ["/images/samsung-s26-plus.webp"],
-        specs: { ram: "12GB", storage: "512GB", battery: "4900 mAh" },
-        stock: 3,
-        freeDelivery: true
-    },
-    {
-        id: 60,
-        name: "Realme 15T (8GB-256GB)",
-        brand: "Realme",
-        price: 86200,
-        description: "Turbo-charged performance for gamers and power users.",
-        images: ["/images/realme-15t.jpg"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 6,
-        freeDelivery: true
-    },
-    {
-        id: 61,
-        name: "Realme Note 70 (6GB-128GB)",
-        brand: "Realme",
-        price: 39985,
-        description: "Reliable daily driver with a large display and smooth performance.",
-        images: ["/images/realme-note-70.jpg"],
-        specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
-        stock: 12,
-        freeDelivery: true
-    },
-    {
-        id: 62,
-        name: "Oppo A6 (8GB-256GB)",
-        brand: "Oppo",
-        price: 79500,
-        description: "Sleek design with high-capacity storage for all your media needs.",
-        images: ["/images/oppo-a6.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 8,
-        freeDelivery: true
-    },
-    {
-        id: 63,
-        name: "Oppo Reno 15F (8GB-256GB)",
-        brand: "Oppo",
-        price: 112000,
-        description: "Fashion-forward smartphone with high-end camera capabilities.",
-        images: ["/images/oppo-reno-15f.jpeg"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 5,
-        freeDelivery: true
-    },
-    {
-        id: 64,
-        name: "Vivo V70 FE 5G (12GB-256GB)",
-        brand: "Vivo",
-        price: 124999,
-        description: "Flagship experience in a Fan Edition. High performance 5G device.",
-        images: ["/images/vivo-v70-fe.png"],
-        specs: { ram: "12GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 6,
-        freeDelivery: true
-    },
-    {
-        id: 65,
-        name: "Vivo Y05 (4GB-128GB)",
-        brand: "Vivo",
-        price: 43230,
-        description: "Great value entry-level phone with impressive battery and storage.",
-        images: ["/images/vivo-y05.png"],
-        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
-        stock: 15,
-        freeDelivery: true
-    },
-    {
-        id: 66,
-        name: "ZTE V60 (8GB-256GB)",
-        brand: "ZTE",
-        price: 33400,
-        description: "Premium features at a fraction of the cost. A true budget disruptor.",
-        images: ["/images/zte-v60.webp"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 12,
-        freeDelivery: true
-    },
-    {
-        id: 67,
-        name: "Digit 6 (3GB-32GB)",
-        brand: "Digit",
-        price: 18850,
-        description: "Simple, effective, and built to last. Perfect for basic smartphone needs.",
-        images: ["/images/digit-6.jpg"],
-        specs: { ram: "3GB", storage: "32GB", battery: "3000 mAh" },
-        stock: 20,
-        freeDelivery: false
-    },
-    {
-        id: 68,
-        name: "Tecno Spark Go 3 (4GB-128GB)",
-        brand: "Tecno",
-        price: 37999,
-        description: "The popular Spark Go 3 now with doubled storage for more apps and photos.",
-        images: ["/images/tecno-spark-go-3.webp"],
-        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
-        stock: 15,
-        freeDelivery: true,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments"
-    },
-    {
-        id: 69,
-        name: "Infinix Smart 20 (4GB-128GB)",
-        brand: "Infinix",
-        price: 37999,
-        description: "The latest generation of the Smart series. Reliable and stylish.",
-        images: ["/images/infinix-smart-20.jpg"],
-        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
-        stock: 14,
-        installment: true,
-        installmentText: "20% Advance, 9 Months Installments",
-        freeDelivery: true
-    },
-    {
-        id: 70,
-        name: "Redmi Note 15 Pro (12GB-256GB)",
-        brand: "Redmi",
-        price: 108500,
-        description: "The ultimate power user's Redmi. Massive RAM and pro-level features.",
-        images: ["/images/Redmi-note-15-pro-blue.webp"],
-        specs: { ram: "12GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 4,
-        freeDelivery: true,
-        badge: { text: "POWERHOUSE", color: "bg-red-600" }
-    },
-    {
-        id: 71,
-        name: "Samsung A56 5G (8GB-256GB)",
-        brand: "Samsung",
-        price: 124000,
-        description: "Reliable 5G performance with premium build quality.",
-        images: ["/images/samsung-a56-5g.avif"],
-        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 8,
-        freeDelivery: true
     },
     {
         id: 72,
@@ -739,55 +524,417 @@ const products = [
         freeDelivery: true
     },
     {
-        id: 73,
-        name: "Tecno Spark 40 (6GB-128GB)",
-        brand: "Tecno",
-        price: 50999,
-        description: "Stylish design with powerful specs. The Spark 40 features a massive display and excellent cameras.",
-        images: ["/images/tecno-spark-40.webp",
-            "/images/tecno-spark-40-blue.webp",
-        ],
-        specs: { ram: "6GB", storage: "128GB", battery: "5200 mAh" },
-        stock: 10,
-        freeDelivery: true,
+        id: 69,
+        name: "Infinix Smart 20 (4GB-128GB)",
+        brand: "Infinix",
+        price: 37999,
+        description: "The latest generation of the Smart series. Reliable and stylish.",
+        images: ["/images/infinix-smart-20.jpg"],
+        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 14,
         installment: true,
-        },
-        {
-        id: 74,
-        name: "Tecno Camon 50 (8GB-256GB)",
-        brand: "Tecno",
-        price: 94999,
-        description: "Stylish design with powerful specs. The camon 50 features a massive 6.78 inch display and excellent 50mp cameras.",
-        images: ["/images/tecno-camon-50.webp",
-        ],
-        specs: { ram: "8GB", storage: "256GB", battery: "6500 mAh" },
-        stock: 10,
-        freeDelivery: true,
+        freeDelivery: true
+    },
+    {
+        id: 42,
+        name: "Infinix Hot 60i (6GB-128GB)",
+        brand: "Infinix",
+        price: 54999,
+        description: "The Infinix Hot 60i delivers smooth performance and a vibrant display, perfect for daily multitasking and media.",
+        images: ["/images/infinix-hot-60-i.jpg"],
+        specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 12,
         installment: true,
-        },
-        {
-            id: 75,
-            name: "12V Router Power Bank UPS",
-            brand: "Gadget",
-            category: "Gadget",
-            price: 2499,
-            description: "High-Power 12V Router Power Bank banaye rakhe aapka internet har waqt ON! Ye specially designed Router UPS Power Bank hai jo aapke WiFi Router, ONT, Fiber Modem ya CCTV ko 6 se 10 ghantay tak ka backup deta hai. Light shedding ya bijli jane par bhi aapka internet uninterrupted chalta rahega. Plug & Play design ke sath bilkul easy to use – koi complex setup nahi chahiye. Perfect for PTCL, StormFiber, Nayatel, Optix, aur doosre 12V routers.",
-            images: ["/images/router-power-bank.jpeg"],
-            specs: { ram: "N/A", storage: "N/A", battery: "2500 mAh" },
-            stock: 25,
-            freeDelivery: true,
-            badge: { text: "ESSENTIAL", color: "bg-teal-500" }
-        },        {
-            id: 76,
-            name: "Samsung 45W PD Adapter",
-            brand: "Gadget",
-            category: "Gadget",
-            price: 1499,
-            description: "45W ultra fast charging with samsung travel adapter.",
-            images: ["/images/samsung-45w-pd-adapter.jpeg"],
-            specs: { ram: "N/A", storage: "N/A", battery: "2500 mAh" },
-            stock: 25,
-            freeDelivery: true,
-            badge: { text: "ESSENTIAL", color: "bg-teal-500" }
-        },
+        freeDelivery: true
+    },
+    {
+        id: 43,
+        name: "Infinix Note 50 (8GB-256GB)",
+        brand: "Infinix",
+        price: 74999,
+        description: "Experience flagship-level power with the Infinix Note 50. This special bundle includes a high-capacity powerbank for non-stop energy.",
+        images: ["/images/infinix-note-50.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 8,
+        installment: true,
+        freeDelivery: true
+    },
+    {
+        id: 44,
+        name: "Infinix Hot 60 Pro+ (8GB-256GB)",
+        brand: "Infinix",
+        price: 74999,
+        description: "Experience flagship-level power with the Infinx Hot 60 Pro+.",
+        images: ["/images/infinix-hot-60-pro+.jpg"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 8,
+        installment: true,
+        freeDelivery: true
+    },
+    {
+        id: 54,
+        name: "Infinix Note 60 Pro (8GB-256GB)",
+        brand: "Infinix",
+        price: 115999,
+        description: "Pushing the boundaries of mid-range power with a beautiful curved display.",
+        images: ["/images/infinix-note-60-pro.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 5,
+        installment: true,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // Oppo
+    // =================================================================================
+    {
+        id: 62,
+        name: "Oppo A6 (8GB-256GB)",
+        brand: "Oppo",
+        price: 79500,
+        description: "Sleek design with high-capacity storage for all your media needs.",
+        images: ["/images/oppo-a6.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 8,
+        freeDelivery: true
+    },
+    {
+        id: 48,
+        name: "Oppo A6s Pro (8GB-256GB)",
+        brand: "Oppo",
+        price: 95350,
+        description: "Powerful performance with a stunning display and ultra-fast charging capabilities.",
+        images: ["/images/oppo-a6s-pro.png"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 6,
+        freeDelivery: true
+    },
+    {
+        id: 63,
+        name: "Oppo Reno 15F (8GB-256GB)",
+        brand: "Oppo",
+        price: 112000,
+        description: "Fashion-forward smartphone with high-end camera capabilities.",
+        images: ["/images/oppo-reno-15f.jpeg"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 5,
+        freeDelivery: true
+    },
+    {
+        id: 47,
+        name: "Oppo Reno 15 Pro (12GB-512GB)",
+        brand: "Oppo",
+        price: 229999,
+        description: "Elegant design meets pro-grade photography. The Reno 15 Pro is built for creators.",
+        images: ["/images/oppo-reno-15-pro.png"],
+        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
+        stock: 4,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // Vivo
+    // =================================================================================
+    {
+        id: 65,
+        name: "Vivo Y05 (4GB-128GB)",
+        brand: "Vivo",
+        price: 43230,
+        description: "Great value entry-level phone with impressive battery and storage.",
+        images: ["/images/vivo-y05.png"],
+        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 15,
+        freeDelivery: true
+    },
+    {
+        id: 50,
+        name: "Vivo Y31d (8GB-256GB)",
+        brand: "Vivo",
+        price: 79695,
+        description: "A perfect balance of style and substance, featuring a large battery and smooth UI.",
+        images: ["/images/vivo-y31d.jpg"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 7,
+        freeDelivery: true
+    },
+    {
+        id: 64,
+        name: "Vivo V70 FE 5G (12GB-256GB)",
+        brand: "Vivo",
+        price: 124999,
+        description: "Flagship experience in a Fan Edition. High performance 5G device.",
+        images: ["/images/vivo-v70-fe.png"],
+        specs: { ram: "12GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 6,
+        freeDelivery: true
+    },
+    {
+        id: 49,
+        name: "Vivo V70 (12GB-512GB)",
+        brand: "Vivo",
+        price: 179999,
+        description: "Experience the next level of mobile videography with Vivo's flagship V70 series.",
+        images: ["/images/vivo-v70.png"],
+        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
+        stock: 3,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // Honor
+    // =================================================================================
+    {
+        id: 55,
+        name: "Honor X6c (6GB-256GB)",
+        brand: "Honor",
+        price: 43670,
+        description: "Reliable performance and elegant design from Honor's latest X-series.",
+        images: ["/images/honor-x6c.png"],
+        specs: { ram: "6GB", storage: "256GB", battery: "5200 mAh" },
+        stock: 8,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // ZTE
+    // =================================================================================
+    {
+        id: 66,
+        name: "ZTE V60 (8GB-256GB)",
+        brand: "ZTE",
+        price: 33400,
+        description: "Premium features at a fraction of the cost. A true budget disruptor.",
+        images: ["/images/zte-v60.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 12,
+        freeDelivery: true
+    },
+    {
+        id: 56,
+        name: "ZTE V80 Pro (8GB-256GB)",
+        brand: "ZTE",
+        price: 45430,
+        description: "High-end specs at an entry-level price point. ZTE's powerhouse for daily users.",
+        images: ["/images/zte-v80-pro.jpg"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 10,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // Digit
+    // =================================================================================
+    {
+        id: 67,
+        name: "Digit 6 (3GB-32GB)",
+        brand: "Digit",
+        price: 18850,
+        description: "Simple, effective, and built to last. Perfect for basic smartphone needs.",
+        images: ["/images/digit-6.jpg"],
+        specs: { ram: "3GB", storage: "32GB", battery: "3000 mAh" },
+        stock: 20,
+        freeDelivery: false
+    },
+    {
+        id: 57,
+        name: "Digit 8 (3GB-64GB)",
+        brand: "Digit",
+        price: 20650,
+        description: "Essential smartphone features for everyone. Compact, reliable, and affordable.",
+        images: ["/images/digit-8.webp"],
+        specs: { ram: "3GB", storage: "64GB", battery: "4000 mAh" },
+        stock: 15,
+        freeDelivery: false
+    },
+
+    // =================================================================================
+    // Gadgets
+    // =================================================================================
+    {
+        id: 76,
+        name: "Samsung 45W PD Adapter",
+        brand: "Gadget",
+        category: "Gadget",
+        price: 1499,
+        description: "45W ultra fast charging with samsung travel adapter.",
+        images: ["/images/samsung-45w-pd-adapter.jpeg"],
+        specs: { ram: "N/A", storage: "N/A", battery: "N/A" },
+        stock: 25,
+        freeDelivery: true
+    },
+    {
+        id: 75,
+        name: "12V Router Power Bank UPS",
+        brand: "Gadget",
+        category: "Gadget",
+        price: 2499,
+        description: "High-Power 12V Router Power Bank banaye rakhe aapka internet har waqt ON! Ye specially designed Router UPS Power Bank hai jo aapke WiFi Router, ONT, Fiber Modem ya CCTV ko 6 se 10 ghantay tak ka backup deta hai. Light shedding ya bijli jane par bhi aapka internet uninterrupted chalta rahega. Plug & Play design ke sath bilkul easy to use – koi complex setup nahi chahiye. Perfect for PTCL, StormFiber, Nayatel, Optix, aur doosre 12V routers.",
+        images: ["/images/router-power-bank.jpeg"],
+        specs: { ram: "N/A", storage: "N/A", battery: "2500 mAh" },
+        stock: 25,
+        freeDelivery: true
+    },
+
+    // =================================================================================
+    // Realme (Newest models at the end)
+    // =================================================================================
+    {
+        id: 85,
+        name: "Realme Note 60X (4GB-64GB)",
+        brand: "Realme",
+        price: 27999,
+        description: "An affordable entry into the Realme ecosystem, offering solid performance for everyday tasks.",
+        images: ["/images/realme-note-60x.png"],
+        specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
+        stock: 20,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 83,
+        name: "Realme C100i (4GB-128GB)",
+        brand: "Realme",
+        price: 38999,
+        description: "The brand new Realme C100i is a budget-friendly powerhouse with a reliable battery and a large, clear display for your daily needs.",
+        images: ["/images/realme-c100i.webp"],
+        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 20,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 61,
+        name: "Realme Note 70 (6GB-128GB)",
+        brand: "Realme",
+        price: 39999,
+        description: "Reliable daily driver with a large display and smooth performance.",
+        images: ["/images/realme-note-70.jpg"],
+        specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 12,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 88,
+        name: "Realme C75X (6GB-128GB)",
+        brand: "Realme",
+        price: 43999,
+        description: "A powerful budget contender with a large battery and ample storage for all your needs.",
+        images: ["/images/realme-c75x.png"],
+        specs: { ram: "6GB", storage: "128GB", battery: "5500 mAh" },
+        stock: 14,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 84,
+        name: "Realme C71 (6GB-128GB)",
+        brand: "Realme",
+        price: 44999,
+        description: "A stylish and capable smartphone with a smooth display and long-lasting battery for all-day use.",
+        images: ["/images/realme-c71.jpg"],
+        specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 15,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 52,
+        name: "Realme C85 (8GB-128GB)",
+        brand: "Realme",
+        price: 59999,
+        description: "The champion of budget phones. Massive storage and excellent battery life.",
+        images: ["/images/realme-c85.webp"],
+        specs: { ram: "8GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 11,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 89,
+        name: "Realme C85 Pro (8GB-256GB)",
+        brand: "Realme",
+        price: 64999,
+        description: "The Pro version of the budget champion, offering enhanced performance and camera features.",
+        images: ["/images/realme-c85-pro.png"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 9,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 60,
+        name: "Realme 15T (8GB-256GB)",
+        brand: "Realme",
+        price: 89999,
+        description: "Turbo-charged performance for gamers and power users.",
+        images: ["/images/realme-15t.jpg"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 9,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 90,
+        name: "Realme 15 (8GB-256GB)",
+        brand: "Realme",
+        price: 119999,
+        description: "A solid performer with a sleek design, great camera, and reliable battery life.",
+        images: ["/images/realme-15.webp"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 6,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 51,
+        name: "Realme 16 (8GB-256GB)",
+        brand: "Realme",
+        price: 129999,
+        description: "Ultra-fast speeds with a high-refresh-rate display and powerful gaming processor.",
+        images: ["/images/realme-16-5g.jpg"],
+        specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 8,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 87,
+        name: "Realme 16 Pro (12GB-256GB)",
+        brand: "Realme",
+        price: 169999,
+        description: "Pro-level performance and camera capabilities in a sleek package. Perfect for power users and photographers.",
+        images: ["/images/realme-16-pro.webp"],
+        specs: { ram: "12GB", storage: "256GB", battery: "5000 mAh" },
+        stock: 7,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 86,
+        name: "Realme 16 Pro+ (12GB-512GB)",
+        brand: "Realme",
+        price: 199999,
+        description: "The ultimate flagship experience from Realme with a top-tier camera, stunning display, and blazing-fast performance.",
+        images: ["/images/realme-16-pro-plus.webp"],
+        specs: { ram: "12GB", storage: "512GB", battery: "5000 mAh" },
+        stock: 5,
+        freeDelivery: true,
+        installment: true
+    }
 ];
+
+/**
+ * Initializes products by generating slugs for them.
+ * This function should be called once after the products array is defined.
+ */
+function initializeProducts() {
+    products.forEach(p => {
+        if (!p.slug) {
+            p.slug = generateSlug(p.name);
+        }
+    });
+}
+
+// Call the function to process the products array.
+initializeProducts();

@@ -180,6 +180,7 @@
                         <a href="index.html" class="hover:text-blue-600 transition text-blue-600 border-b-2 border-blue-600">Home</a>
                         <a href="offers.html" class="hover:text-blue-600 transition">Offers</a>
                         <a href="installments.html" class="hover:text-blue-600 transition">Installments</a>
+                        <a href="calculator.html" class="hover:text-blue-600 transition">Calculator</a>
                         <a href="gadgets.html" class="hover:text-blue-600 transition">Gadgets</a>
                     </div>
                     
@@ -214,6 +215,7 @@
                     <a href="index.html" class="flex items-center gap-4 text-blue-600 p-3 bg-blue-50 rounded-2xl"><i class="fas fa-home w-6"></i> Home</a>
                     <a href="offers.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-tags w-6"></i> Latest Offers</a>
                     <a href="installments.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-calendar-alt w-6"></i> Installment Plans</a>
+                    <a href="calculator.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-calculator w-6"></i> Calculator</a>
                     <a href="gadgets.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-plug w-6"></i> Gadgets</a>
                     <div class="h-[1px] bg-slate-100 my-2"></div>
                     <a href="index.html#product-grid" onclick="toggleMobileMenu()" class="flex items-center gap-4 hover:text-blue-600 transition p-3 text-base"><i class="fas fa-th-large w-6"></i> Our Collection</a>
@@ -428,7 +430,17 @@
     <script>
         initApp(); // App ko initialize karein
         renderHero(); // Hero section render karein
-        renderProducts(true, false);
+        
+        // Check if we are returning from a product page
+        const savedPage = sessionStorage.getItem('shahab_last_page');
+        if (savedPage) {
+            currentPage = parseInt(savedPage, 10);
+            sessionStorage.removeItem('shahab_last_page'); // Use it once and remove
+            renderProducts(false, true); // Render the saved page and scroll to it
+        } else {
+            renderProducts(true, false); // Fresh visit, render page 1
+        }
+
         hideLoadingScreen();
         startCountdown("2026-07-10T23:59:59", "home-countdown-timer");
     </script>

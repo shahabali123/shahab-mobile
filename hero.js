@@ -8,7 +8,8 @@ const heroConfig = {
     image: "/images/logo.png",
     primaryBtn: { text: "Explore Collection", link: "#product-grid" },
     secondaryBtn: { text: "Latest Offers", link: "offers.html" }, 
-    installmentBtn: { text: "Easy Installments", link: "installments.html" }, // Added new button for Installments
+    installmentBtn: { text: "Easy Installments", link: "installments.html" },
+    calculatorBtn: { text: "Installment Calculator", link: "calculator.html" }, // Calculator button
     watermark: "SHAHAB" // Background mein bara text jo nazar ata hai
 };
 
@@ -39,6 +40,9 @@ function renderHero() {
                     </a>
                     <a href="${heroConfig.installmentBtn.link}" class="bg-green-600 text-white px-10 py-5 rounded-2xl font-bold hover:bg-green-500 transition shadow-2xl shadow-green-500/20 hover:-translate-y-1 duration-300 flex items-center gap-3">
                         <i class="fas fa-hand-holding-usd"></i> ${heroConfig.installmentBtn.text}
+                    </a>
+                    <a href="${heroConfig.calculatorBtn.link}" class="bg-yellow-500 text-slate-900 px-10 py-5 rounded-2xl font-bold hover:bg-yellow-400 transition shadow-2xl shadow-yellow-500/20 hover:-translate-y-1 duration-300 flex items-center gap-3">
+                        <i class="fas fa-calculator"></i> ${heroConfig.calculatorBtn.text}
                     </a>
                 </div>
             </div>

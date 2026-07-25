@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installment Calculator | Shahab Mobile</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="description" content="Calculate easy monthly installments for your favorite smartphones at Shahab Mobile. Search any model and get a detailed installment plan.">
+    <link rel="icon" href="/images/logo.png" type="image/png">
+    <link rel="canonical" href="https://shahabmobile.netlify.app/calculator.html" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .loader-ring {
+            width: 80px; height: 80px; border-radius: 50%;
+            border: 4px solid #f1f5f9; border-top: 4px solid #2563eb;
+            animation: spin-loader 1s linear infinite;
+        }
+        @keyframes spin-loader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-900 overflow-x-hidden">
+
+    <!-- Global Page Loader -->
+    <div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="relative flex items-center justify-center">
+            <div class="loader-ring"></div>
+            <img src="/images/logo.png" class="absolute w-12 h-12 rounded-2xl object-contain shadow-sm">
+        </div>
+        <p class="text-slate-400 font-bold mt-4 animate-pulse tracking-wide">Loading Calculator...</p>
+    </div>
+
+    <!-- Header -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 py-3">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3 group cursor-pointer" onclick="window.location.href='index.html'">
+                    <img src="/images/logo.png" alt="Shahab Mobile Logo" class="w-12 h-12 object-contain group-hover:rotate-12 transition-transform">
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900">SHAHAB<span class="text-blue-600">MOBILE</span></h1>
+                </div>
+                <div class="hidden md:flex gap-6 font-semibold text-slate-600">
+                    <a href="index.html" class="hover:text-blue-600 transition">Home</a>
+                    <a href="offers.html" class="hover:text-blue-600 transition">Offers</a>
+                    <a href="installments.html" class="hover:text-blue-600 transition">Installments</a>
+                    <a href="calculator.html" class="text-blue-600 border-b-2 border-blue-600">Calculator</a>
+                    <a href="gadgets.html" class="hover:text-blue-600 transition">Gadgets</a>
+                </div>
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 hover:bg-slate-100 rounded-full transition text-slate-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="menu-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[90] hidden md:hidden"></div>
+    <div id="mobile-menu" class="fixed top-4 right-4 bottom-4 w-[280px] bg-white z-[100] translate-x-[120%] transition-transform duration-500 md:hidden flex flex-col shadow-2xl rounded-3xl border border-slate-100">
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+            <h2 class="text-xl font-bold flex items-center gap-3"><i class="fas fa-bars text-blue-600"></i> Menu</h2>
+            <button onclick="toggleMobileMenu()" class="text-3xl font-light text-slate-400">&times;</button>
+        </div>
+        <div class="flex flex-col p-6 gap-6 text-lg font-bold text-slate-600">
+            <a href="index.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-home w-6"></i> Home</a>
+            <a href="offers.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-tags w-6"></i> Latest Offers</a>
+            <a href="installments.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-calendar-alt w-6"></i> Installment Plans</a>
+            <a href="calculator.html" class="flex items-center gap-4 text-blue-600 p-3 bg-blue-50 rounded-2xl"><i class="fas fa-calculator w-6"></i> Calculator</a>
+            <a href="gadgets.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-plug w-6"></i> Gadgets</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-6 py-12">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <span class="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-widest">Shahab Mobile</span>
+                <h1 class="text-4xl md:text-6xl font-black text-slate-900 mt-4 mb-4">Installment Calculator</h1>
+                <p class="text-slate-500 text-lg max-w-2xl mx-auto">Apni pasand ka phone search karein aur asaan mahana qiston ka plan maloom karein.</p>
+            </div>
+
+            <!-- Search Box -->
+            <div class="relative group mb-12">
+                <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 text-xl"></i>
+                <input type="text" id="calculator-search" onkeyup="handleCalculatorSearch(event)" placeholder="Phone model search karein (e.g., Tecno Spark 40)" class="w-full bg-white border-2 border-slate-200 pl-16 pr-6 py-5 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 outline-none transition-all text-lg font-semibold" autocomplete="off">
+                <div id="calculator-suggestions" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 hidden z-[100] max-h-72 overflow-y-auto custom-scrollbar"></div>
+            </div>
+
+            <!-- Result Display -->
+            <div id="calculator-result" class="space-y-10">
+                <!-- Content will be injected by JS -->
+            </div>
+
+            <!-- Initial Message -->
+            <div id="calculator-initial-message" class="text-center py-16 bg-white rounded-3xl border border-slate-100">
+                <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-calculator text-4xl text-slate-300"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold text-slate-800 mb-2">Select a Product</h3>
+                <p class="text-slate-500">Upar search bar mein product ka naam likh kar select karein.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white pt-16 pb-8 mt-20">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+            <!-- Footer content from other pages -->
+            <div class="col-span-1 md:col-span-1">
+                <div class="flex items-center gap-3 mb-6">
+                    <img src="/images/logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-lg">
+                    <h2 class="text-xl font-bold uppercase tracking-wider">Shahab Mobile</h2>
+                </div>
+                <p class="text-slate-400 leading-relaxed mb-6">Apki pasandida mobile shop jahan apko milte hain original products, official warranty aur behtreen qeemat.</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold mb-6">Quick Links</h3>
+                <ul class="space-y-4 text-slate-400">
+                    <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                    <li><a href="offers.html" class="hover:text-white transition">Latest Offers</a></li>
+                    <li><a href="installments.html" class="hover:text-white transition">Installment Plans</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold mb-6">Contact Us</h3>
+                <ul class="space-y-4 text-slate-400">
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt mt-1 text-blue-500"></i>
+                        <a href="https://www.google.com/maps?q=34.33185278263107,73.1975088998034" target="_blank" class="hover:text-white transition">Main Shinkiari Road, Mansehra City, Pakistan</a>
+                    </li>
+                    <li class="flex items-center gap-3"><i class="fas fa-phone text-blue-500"></i> +92 342 0475187</li>
+                </ul>
+            </div>
+        </div>
+        <div class="container mx-auto px-6 border-t border-slate-800 mt-16 pt-8 text-center text-slate-500 text-sm">
+            <p>&copy; 2024 Shahab Mobile. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Initialize the app and hide the loader
+        initApp();
+        hideLoadingScreen();
+
+        // Close suggestions when clicking outside the search area
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.group')) {
+                document.getElementById('calculator-suggestions')?.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -88,7 +88,7 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
         return `
         <div class="product-card reveal-item bg-white rounded-3xl p-5 border border-slate-100 group relative perspective-1000"
              onmousemove="handle3DTilt(event, this)" onmouseleave="reset3DTilt(this)"
-             onclick="window.location.href='product.html?id=${product.id}'">
+             onclick="savePageAndRedirect('${product.slug}')">
             <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
                 ${product.badge ? `<span class="${product.badge.color} text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">${product.badge.text}</span>` : ''}
                 ${product.freeDelivery ? '<span class="bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg shadow-green-100">FREE DELIVERY</span>' : ''}
@@ -106,8 +106,8 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
                 <img data-src="${product.images[0]}" class="w-4/5 h-4/5 object-contain group-hover:scale-110 transition duration-500 product-card-image">
                 <div class="watermark-logo"></div>
             </div>
-            <p class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-1">${product.brand}</p>
-            <h3 class="font-bold text-slate-800 mb-2 truncate cursor-pointer hover:text-blue-600" title="${product.name}" onclick="window.location.href='product.html?id=${product.id}'">${product.name}</h3>
+            <p class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-1" onclick="event.stopPropagation(); savePageAndRedirect('${product.slug}')">${product.brand}</p>
+            <h3 class="font-bold text-slate-800 mb-2 truncate cursor-pointer hover:text-blue-600" title="${product.name}" onclick="savePageAndRedirect('${product.slug}')">${product.name}</h3>
             <div class="flex justify-between items-center mb-4">
                 <p class="text-xl font-extrabold text-slate-900">Rs. ${product.price.toLocaleString()}</p>
             </div>
@@ -121,6 +121,16 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
     `;
 }
 
+/**
+ * Saves the current page to sessionStorage and redirects to the product page.
+ * @param {string} productSlug - The slug of the product to redirect to.
+ */
+function savePageAndRedirect(productSlug) {
+    // Save the current page number before navigating away
+    sessionStorage.setItem('shahab_last_page', currentPage);
+    window.location.href = `product.html?slug=${productSlug}`;
+}
+
 // Render Products
 function renderProducts(resetPage = false, shouldScroll = false) {
     if (resetPage) currentPage = 1;
@@ -128,7 +138,8 @@ function renderProducts(resetPage = false, shouldScroll = false) {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
 
-    let filtered = [...products];
+    // Reverse the array to show newest products first, as requested.
+    let filtered = [...products].reverse();
     
     // Apply Navbar Search Filter
     const searchInp = document.getElementById('searchBar') || document.getElementById('searchBarMobile');
@@ -473,15 +484,15 @@ function handleSearch(e) {
 
     const matched = products.filter(p => 
         p.name.toLowerCase().includes(query) || 
-        p.brand.toLowerCase().includes(query)
+        p.brand.toLowerCase().includes(query) || p.slug.includes(query)
     ).slice(0, 5);
 
     if (matched.length > 0) {
         suggestions.innerHTML = matched.map(p => `
-            <div class="flex items-center gap-4 p-4 hover:bg-slate-50 cursor-pointer transition border-b border-slate-50 last:border-0" onclick="window.location.href='product.html?id=${p.id}'">
+            <div class="flex items-center gap-4 p-4 hover:bg-slate-50 cursor-pointer transition border-b border-slate-50 last:border-0" onclick="savePageAndRedirect('${p.slug}')">
                 <img src="${p.images[0]}" class="w-12 h-12 object-contain rounded-lg">
                 <div>
-                    <p class="font-bold text-slate-800 text-sm">${p.name}</p>
+                    <p class="font-bold text-slate-800 text-sm">${p.name}</p> 
                     <p class="text-blue-600 font-bold text-xs">Rs. ${p.price.toLocaleString()}</p>
                 </div>
             </div>
@@ -495,7 +506,7 @@ function handleSearch(e) {
 
 // Product Details Logic
 function showDetails(id) {
-    const p = products.find(product => product.id === id);
+    const p = products.find(product => product.id === id || product.slug === id);
     if (!p) return;
 
     triggerVibration(20); // Subtle vibration for opening details
@@ -622,12 +633,12 @@ function showDetails(id) {
 // Single Product Page Logic
 function initProductPage() {
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = parseInt(urlParams.get('id'));
+    const productSlug = urlParams.get('slug');
     const container = document.getElementById('product-page-content');
     
     if (!container) return;
     
-    const p = products.find(product => product.id === productId);
+    const p = products.find(product => product.slug === productSlug);
     
     if (!p) {
         container.innerHTML = `
@@ -687,7 +698,7 @@ function initProductPage() {
     container.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 w-full">
             <div class="bg-slate-50 p-8 md:p-12 flex flex-col gap-6 items-center">
-                <div class="w-full max-w-md relative loading-image-container" onclick="openLightbox(${p.id})">
+                <div class="w-full max-w-md relative loading-image-container" onclick="openLightbox('${p.slug}')">
                     <img id="product-page-main-image" src="${p.images[0]}" class="w-full aspect-square object-contain bg-white rounded-[3rem] shadow-inner border border-slate-100 p-8 cursor-pointer" onload="this.parentElement.classList.add('loaded');" alt="${p.name}">
                     <div class="watermark-logo"></div>
                 </div>
@@ -845,6 +856,111 @@ function shareProduct(productId) {
     }
 }
 
+// Calculator Page Logic
+function handleCalculatorSearch(e) {
+    const query = e.target.value.toLowerCase();
+    const suggestions = document.getElementById('calculator-suggestions');
+    
+    if (!query) {
+        suggestions.classList.add('hidden');
+        return;
+    }
+
+    // Filter only products available for installment
+    const matched = products.filter(p => 
+        p.installment && (p.name.toLowerCase().includes(query) || p.brand.toLowerCase().includes(query))
+    ).slice(0, 5);
+
+    if (matched.length > 0) {
+        suggestions.innerHTML = matched.map(p => `
+            <div class="flex items-center gap-4 p-4 hover:bg-slate-50 cursor-pointer transition border-b border-slate-50 last:border-0" onclick="renderCalculatorDetails('${p.slug}')">
+                <img src="${p.images[0]}" class="w-12 h-12 object-contain rounded-lg">
+                <div>
+                    <p class="font-bold text-slate-800 text-sm">${p.name}</p>
+                    <p class="text-blue-600 font-bold text-xs">Rs. ${p.price.toLocaleString()}</p>
+                </div>
+            </div>
+        `).join('');
+        suggestions.classList.remove('hidden');
+    } else {
+        suggestions.innerHTML = `<p class="p-4 text-slate-400 text-sm text-center">No installment products found</p>`;
+        suggestions.classList.remove('hidden');
+    }
+}
+
+function renderCalculatorDetails(productIdentifier) {
+    const p = products.find(product => product.id === productIdentifier || product.slug === productIdentifier);
+    if (!p) return;
+
+    const resultContainer = document.getElementById('calculator-result');
+    const initialMsg = document.getElementById('calculator-initial-message');
+    const suggestions = document.getElementById('calculator-suggestions');
+    const searchInput = document.getElementById('calculator-search');
+
+    // Hide initial message and suggestions, update search bar
+    initialMsg.classList.add('hidden');
+    suggestions.classList.add('hidden');
+    searchInput.value = p.name;
+
+    const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { plans: [] };
+    const advanceOptions = getAdvanceOptionsForPrice(p.price);
+
+    let html = `
+        <!-- Selected Product -->
+        <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-lg flex flex-col md:flex-row items-center gap-8 animate-in fade-in duration-500">
+            <img src="${p.images[0]}" alt="${p.name}" class="w-32 h-32 object-contain rounded-2xl bg-slate-50 p-2">
+            <div class="flex-grow text-center md:text-left">
+                <span class="text-blue-600 font-bold text-sm uppercase tracking-widest">${p.brand}</span>
+                <h2 class="text-3xl font-black text-slate-900 mt-1">${p.name}</h2>
+                <p class="text-2xl font-bold text-slate-700 mt-2">Total Price: <span class="text-blue-600">Rs. ${p.price.toLocaleString()}</span></p>
+            </div>
+        </div>
+
+        <!-- Installment Plans -->
+        <div class="space-y-8">
+            ${config.plans.map(plan => {
+                return `
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-lg animate-in fade-in duration-700">
+                    <h3 class="text-2xl font-extrabold text-slate-800 mb-6">${plan.months} Months Installment Plan</h3>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <table class="w-full text-center min-w-[600px]">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="p-4 font-bold text-slate-600 text-sm">Advance %</th>
+                                    <th class="p-4 font-bold text-slate-600 text-sm">Advance Payment</th>
+                                    <th class="p-4 font-bold text-blue-700 text-sm">Monthly Installment</th>
+                                    <th class="p-4 font-bold text-slate-600 text-sm">Total Cost</th>
+                                    <th class="p-4 font-bold text-red-600 text-sm">Extra Charges (Markup)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${advanceOptions.map(advPercent => {
+                                    const downPayment = Math.round(p.price * (advPercent / 100));
+                                    const { emi, totalCost } = calculateInstallmentDetails(p.price, advPercent, plan.months);
+                                    const extraCharges = totalCost - p.price;
+
+                                    return `
+                                    <tr class="border-t border-slate-200">
+                                        <td class="p-4 font-semibold text-slate-700">${advPercent}%</td>
+                                        <td class="p-4 font-semibold text-slate-700">Rs. ${downPayment.toLocaleString()}</td>
+                                        <td class="p-4 font-bold text-blue-600 text-lg">Rs. ${emi.toLocaleString()}<span class="text-sm font-normal">/mo</span></td>
+                                        <td class="p-4 font-semibold text-slate-700">Rs. ${totalCost.toLocaleString()}</td>
+                                        <td class="p-4 font-bold text-red-500">Rs. ${extraCharges.toLocaleString()}</td>
+                                    </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+
+    resultContainer.innerHTML = html;
+}
+
 function updateMainImage(index) {
     lightboxIndex = index;
     const mainImgContainer = document.getElementById('modal-main-image');
@@ -859,11 +975,11 @@ function updateMainImage(index) {
 /**
  * Opens the lightbox to view product images in full-screen.
  * @param {number} [productId] - The ID of the product to display. If not provided, it uses the globally set product.
+ * @param {string|number} [identifier] - The ID or slug of the product.
  */
-function openLightbox(productId) {
-    // Agar productId di gayi hai, to us product ko set karo.
-    if (productId) {
-        const p = products.find(product => product.id === productId);
+function openLightbox(identifier) {
+    if (identifier) {
+        const p = products.find(product => product.id === identifier || product.slug === identifier);
         if (!p) return;
         currentLightboxProduct = p;
         lightboxImages = p.images;
