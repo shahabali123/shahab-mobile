@@ -656,9 +656,18 @@ function initProductPage() {
     currentLightboxProduct = p; // Store the product for the lightbox
 
     // Update SEO Metadata
-    document.title = `${p.name} - Rs. ${p.price.toLocaleString()} | Shahab Mobile`;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', `Buy ${p.name} for Rs. ${p.price.toLocaleString()} at Shahab Mobile Mansehra. ${p.description}`);
+    const pageTitle = `${p.name} - Rs. ${p.price.toLocaleString()} | Shahab Mobile`;
+    const pageDescription = `Buy ${p.name} for Rs. ${p.price.toLocaleString()} at Shahab Mobile Mansehra. ${p.description}`;
+    const pageUrl = window.location.href;
+    const imageUrl = new URL(p.images[0], window.location.origin).href;
+
+    document.title = pageTitle;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', pageDescription);
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', pageUrl);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', pageTitle);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', pageDescription);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', pageUrl);
+    document.querySelector('meta[property="og:image"]')?.setAttribute('content', imageUrl);
 
 
     // Dynamic Structured Data for SEO (Product Schema)
@@ -666,7 +675,7 @@ function initProductPage() {
         "@context": "https://schema.org/",
         "@type": "Product",
         "name": p.name,
-        "image": [window.location.origin + p.images[0].replace('./', '/')],
+        "image": [imageUrl],
         "description": p.description,
         "brand": {
             "@type": "Brand",
@@ -674,7 +683,7 @@ function initProductPage() {
         },
         "offers": {
             "@type": "Offer",
-            "url": window.location.href,
+            "url": pageUrl,
             "priceCurrency": "PKR",
             "price": p.price,
             "availability": p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",

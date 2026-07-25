@@ -6,44 +6,20 @@
     <title>Product Details | Shahab Mobile</title>
     <link rel="manifest" href="manifest.json">
     <meta name="description" content="Explore details for mobile phones available at Shahab Mobile Mansehra.">
+    <link rel="canonical" href="" /> <!-- Will be updated by JS -->
     <link rel="icon" href="/images/logo.png" type="image/png">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="product">
     <meta property="og:site_name" content="Shahab Mobile">
-    <meta property="og:url" content="">
-    <meta property="og:title" content="Product Details | Shahab Mobile">
-    <meta property="og:description" content="Explore details for mobile phones available at Shahab Mobile Mansehra.">
-    <meta property="og:image" content="https://shahabmobile.netlify.app/images/logo.png">
+    <meta property="og:url" content=""> <!-- Will be updated by JS -->
+    <meta property="og:title" content="Product Details | Shahab Mobile"> <!-- Will be updated by JS -->
+    <meta property="og:description" content="Explore details for mobile phones available at Shahab Mobile Mansehra."> <!-- Will be updated by JS -->
+    <meta property="og:image" content="https://shahabmobile.netlify.app/images/logo.png"> <!-- Will be updated by JS -->
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Product Details | Shahab Mobile">
-    <meta property="twitter:description" content="Explore details for mobile phones available at Shahab Mobile Mansehra.">
-    <meta property="twitter:image" content="https://shahabmobile.netlify.app/images/logo.png">
 
-    <!-- Dynamic Meta Tag Injection Script -->
-    <script src="products.js"></script>
-    <script>
-        (function() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const productId = parseInt(urlParams.get('id'));
-                const product = products.find(p => p.id === productId);
-
-                if (product) {
-                    const imageUrl = new URL(product.images[0], window.location.href).href;
-                    document.querySelector('meta[property="og:title"]').setAttribute('content', product.name);
-                    document.querySelector('meta[property="twitter:title"]').setAttribute('content', product.name);
-                    document.querySelector('meta[property="og:description"]').setAttribute('content', `Rs. ${product.price.toLocaleString()} - ${product.description}`);
-                    document.querySelector('meta[property="twitter:description"]').setAttribute('content', `Rs. ${product.price.toLocaleString()} - ${product.description}`);
-                    document.querySelector('meta[property="og:image"]').setAttribute('content', imageUrl);
-                    document.querySelector('meta[property="twitter:image"]').setAttribute('content', imageUrl);
-                    document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
-                }
-            } catch (e) { console.error("Failed to dynamically set meta tags:", e); }
-        })();
-    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
