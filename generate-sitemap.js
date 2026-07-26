@@ -27,6 +27,9 @@ const script = new (require('vm').Script)(productsContent);
 script.runInNewContext(context);
 products = context.products;
 
+// Initialize products to generate slugs before creating the sitemap
+context.initializeProducts();
+
 if (!Array.isArray(products)) {
     console.error('Error: Could not load products array from products.js. Ensure products.js defines a global "products" array.');
     process.exit(1);
