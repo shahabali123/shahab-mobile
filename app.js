@@ -1201,16 +1201,62 @@ function hideToast() {
     document.getElementById('toast').classList.add('hidden');
 }
 
+// Pagination change handler
+function changePage(page) {
+    if (page < 1) return;
+    const totalPages = Math.ceil(products.length / itemsPerPage); // A rough estimate, will be recalculated in renderProducts
+    if (page > totalPages && totalPages > 0) return; // Prevent going beyond a roughly estimated last page
+
+    currentPage = page;
+    renderProducts(false, true);
+}
+
 // Pagination Logic
 function renderPagination(totalItems) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const container = document.getElementById('pagination-controls');
     if (!container) return;
 
-    let html = '';
-    for (let i = 1; i <= totalPages; i++) {
-        html += `<button onclick="currentPage=${i}; renderProducts(false, true);" class="w-10 h-10 rounded-xl font-bold transition ${currentPage === i ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-blue-600 focus:border-blue-600'}">${i}</button>`;
+    if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
     }
+
+    let html = '';
+    const pageWindow = 1; // Pages to show around current page
+    let pagesToShow = new Set();
+
+    // Always show first and last page
+    pagesToShow.add(1);
+    pagesToShow.add(totalPages);
+
+    // Show pages around current page
+    for (let i = -pageWindow; i <= pageWindow; i++) {
+        const page = currentPage + i;
+        if (page > 1 && page < totalPages) {
+            pagesToShow.add(page);
+        }
+    }
+    // Also add current page if it's 1 or totalPages
+    pagesToShow.add(currentPage);
+
+    const sortedPages = [...pagesToShow].sort((a, b) => a - b);
+
+    // Previous Button
+    html += `<button onclick="changePage(${currentPage - 1})" class="px-4 h-10 rounded-xl font-bold transition bg-white border border-slate-200 text-slate-500 hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
+
+    let lastPage = 0;
+    sortedPages.forEach(page => {
+        if (lastPage > 0 && page - lastPage > 1) {
+            html += `<span class="w-10 h-10 flex items-center justify-center text-slate-400">...</span>`;
+        }
+        html += `<button onclick="changePage(${page})" class="w-10 h-10 rounded-xl font-bold transition ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-blue-600'}">${page}</button>`;
+        lastPage = page;
+    });
+
+    // Next Button
+    html += `<button onclick="changePage(${currentPage + 1})" class="px-4 h-10 rounded-xl font-bold transition bg-white border border-slate-200 text-slate-500 hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+
     container.innerHTML = html;
 }
 
