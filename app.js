@@ -1227,3 +1227,193 @@ function startCountdown(endTimeString, elementId, isCompact = false) {
         }
     }, 1000);
 }
+
+/**
+ * Renders a horizontal auto-scrolling slider for "Hot Selling" items.
+ * @param {string} containerId - The ID of the container element for the slider.
+ */
+function renderHotSellingSlider(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const hotItems = products.filter(p => p.badge && p.badge.text === "Hot Selling");
+
+    if (hotItems.length === 0) {
+        container.innerHTML = `<p class="text-slate-500">No hot selling items at the moment.</p>`;
+        return;
+    }
+
+    container.innerHTML = hotItems.map(p => `
+        <div class="hot-selling-card bg-white rounded-3xl p-5 border border-slate-100 shadow-lg shadow-slate-100/50 cursor-pointer" onclick="savePageAndRedirect('${p.slug}')">
+            <div class="aspect-square bg-slate-50 rounded-2xl mb-4 overflow-hidden flex items-center justify-center relative">
+                <img src="${p.images[0]}" class="w-4/5 h-4/5 object-contain">
+                <span class="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">${p.badge.text}</span>
+            </div>
+            <h4 class="font-bold text-slate-800 truncate">${p.name}</h4>
+            <p class="text-lg font-extrabold text-slate-900">Rs. ${p.price.toLocaleString()}</p>
+        </div>
+    `).join('');
+
+    // Auto-scroll logic
+    let scrollInterval;
+
+    const startScrolling = () => {
+        scrollInterval = setInterval(() => {
+            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+                // If at the end, scroll back to the beginning smoothly
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                // Scroll by one card width
+                container.scrollBy({ left: 280 + 16, behavior: 'smooth' }); // card width + gap
+            }
+        }, 3000); // Change slide every 3 seconds
+    };
+
+    const stopScrolling = () => {
+        clearInterval(scrollInterval);
+    };
+
+    container.addEventListener('mouseenter', stopScrolling);
+    container.addEventListener('mouseleave', startScrolling);
+    container.addEventListener('touchstart', stopScrolling, { passive: true });
+    container.addEventListener('touchend', startScrolling, { passive: true });
+
+
+    startScrolling();
+}
+
+// =================================================================================
+// Purchase Guide Logic
+// =================================================================================
+
+// Global variables for the guide to manage state
+let guideRecommendedPhones = [];
+let guideCurrentIndex = 0;
+
+/**
+ * Populates the brand filter dropdown on the guide page.
+ */
+function populateGuideBrandFilter() {
+    const brandFilter = document.getElementById('guide-brand');
+    if (!brandFilter) return;
+
+    const brands = [...new Set(products.map(p => p.brand))];
+    brands.sort();
+
+    brands.forEach(brand => {
+        const option = document.createElement('option');
+        option.value = brand;
+        option.innerText = brand;
+        brandFilter.appendChild(option);
+    });
+}
+
+/**
+ * Finds and displays recommended phones based on user input from the guide page.
+ */
+function findRecommendedPhone() {
+    const budgetInput = document.getElementById('guide-budget');
+    const priority = document.getElementById('guide-priority')?.value;
+    const brand = document.getElementById('guide-brand')?.value;
+    const installmentsOnly = document.getElementById('guide-installments')?.checked;
+    const resultsContainer = document.getElementById('guide-results');
+    const initialMessage = document.getElementById('guide-initial-message');
+    const showMoreContainer = document.getElementById('guide-show-more-container');
+
+    if (!budgetInput || !resultsContainer || !initialMessage || !showMoreContainer) return;
+
+    // Reset state for a new search
+    guideRecommendedPhones = [];
+
+    const budget = parseInt(budgetInput.value);
+
+    if (!budget || budget <= 0) {
+        showToast("Please enter a valid budget.", "error");
+        return;
+    }
+
+    initialMessage.classList.add('hidden');
+    showMoreContainer.classList.add('hidden'); // Hide "Show More" on new search
+    resultsContainer.innerHTML = `<div class="col-span-full text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i><p class="mt-2">Finding the best phones for you...</p></div>`;
+
+    setTimeout(() => {
+        let filtered = products.filter(p => p.price <= budget && p.category !== 'Gadget');
+
+        if (brand !== 'Any') {
+            filtered = filtered.filter(p => p.brand === brand);
+        }
+
+        if (installmentsOnly) {
+            filtered = filtered.filter(p => p.installment === true);
+        }
+
+        // Apply scoring based on priority
+        filtered.forEach(p => {
+            p.score = 0;
+            // Base score on how close it is to the budget without going over
+            p.score += p.price / budget;
+
+            if (priority === 'battery') {
+                p.score += (parseInt(p.specs.battery) || 0) / 5000; // Normalize score
+            }
+            if (priority === 'gaming') {
+                // Prioritize RAM. Assuming format "8GB" or "8+8GB"
+                const ram = parseInt(p.specs.ram.split('+')[0]) || 0;
+                p.score += ram / 8; // Normalize score
+            }
+            if (priority === 'value') {
+                // Higher score for lower price
+                p.score -= p.price / budget;
+            }
+            // For 'camera' and 'overall', price is a decent proxy for quality
+        });
+
+        // Sort by score, descending
+        filtered.sort((a, b) => b.score - a.score);
+
+        guideRecommendedPhones = filtered; // Store all filtered results
+        guideCurrentIndex = 0; // Reset index
+
+        const top3 = guideRecommendedPhones.slice(0, 3);
+        guideCurrentIndex = top3.length;
+
+        if (top3.length > 0) {
+            resultsContainer.innerHTML = `
+                <h3 class="col-span-full text-2xl font-extrabold text-slate-800 mb-4 text-center">Here are my top recommendations for you!</h3>
+                ${top3.map(p => createProductCardHtml(p)).join('')}`;
+            
+            // Show "Show More" button if there are more results
+            if (guideRecommendedPhones.length > guideCurrentIndex) {
+                showMoreContainer.innerHTML = `<button onclick="showMoreRecommendedPhones()" class="bg-slate-800 text-white py-3 px-8 rounded-xl font-bold hover:bg-slate-700 transition shadow-lg">Show More Phones</button>`;
+                showMoreContainer.classList.remove('hidden');
+            }
+
+        } else {
+            resultsContainer.innerHTML = `<div class="col-span-full py-10 text-center"><h3 class="text-xl font-bold text-slate-700">Sorry, no phones found in your budget.</h3><p class="text-slate-500">Try increasing your budget or changing the brand.</p></div>`;
+        }
+        observeElements(); // Re-run scroll reveal for new cards
+    }, 500); // Simulate "thinking"
+}
+
+/**
+ * Shows the next batch of recommended phones.
+ */
+function showMoreRecommendedPhones() {
+    const resultsContainer = document.getElementById('guide-results');
+    const showMoreContainer = document.getElementById('guide-show-more-container');
+
+    if (!resultsContainer || !showMoreContainer) return;
+
+    const nextBatch = guideRecommendedPhones.slice(guideCurrentIndex, guideCurrentIndex + 3);
+    
+    if (nextBatch.length > 0) {
+        resultsContainer.innerHTML += nextBatch.map(p => createProductCardHtml(p)).join('');
+        guideCurrentIndex += nextBatch.length;
+        observeElements(); // Observe new cards
+    }
+
+    // Hide the button if no more results are left
+    if (guideCurrentIndex >= guideRecommendedPhones.length) {
+        showMoreContainer.classList.add('hidden');
+    }
+}

@@ -53,6 +53,10 @@ let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${baseUrl}guide.html</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>${baseUrl}gadgets.html</loc>
     <priority>0.8</priority>
   </url>

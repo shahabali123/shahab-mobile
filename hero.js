@@ -10,6 +10,7 @@ const heroConfig = {
     secondaryBtn: { text: "Latest Offers", link: "offers.html" }, 
     installmentBtn: { text: "Easy Installments", link: "installments.html" },
     calculatorBtn: { text: "Installment Calculator", link: "calculator.html" }, // Calculator button
+    guideBtn: { text: "Purchase Guide", link: "guide.html" }, // Purchase Guide button
     watermark: "SHAHAB" // Background mein bara text jo nazar ata hai
 };
 
@@ -43,6 +44,9 @@ function renderHero() {
                     </a>
                     <a href="${heroConfig.calculatorBtn.link}" class="bg-yellow-500 text-slate-900 px-10 py-5 rounded-2xl font-bold hover:bg-yellow-400 transition shadow-2xl shadow-yellow-500/20 hover:-translate-y-1 duration-300 flex items-center gap-3">
                         <i class="fas fa-calculator"></i> ${heroConfig.calculatorBtn.text}
+                    </a>
+                    <a href="${heroConfig.guideBtn.link}" class="bg-purple-600 text-white px-10 py-5 rounded-2xl font-bold hover:bg-purple-500 transition shadow-2xl shadow-purple-500/20 hover:-translate-y-1 duration-300 flex items-center gap-3">
+                        <i class="fas fa-robot"></i> ${heroConfig.guideBtn.text}
                     </a>
                 </div>
             </div>

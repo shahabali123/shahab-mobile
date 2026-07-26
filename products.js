@@ -331,6 +331,7 @@ const products = [
         images: ["/images/tecno-spark-40.webp", "/images/tecno-spark-40-blue.webp"],
         specs: { ram: "6GB", storage: "128GB", battery: "5200 mAh" },
         stock: 10,
+        badge: { text: "Hot Selling", color: "bg-orange-500" },
         freeDelivery: true,
         installment: true
     },
@@ -379,6 +380,7 @@ const products = [
         images: ["/images/tecno-camon-50.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "6500 mAh" },
         stock: 10,
+        badge: { text: "Hot Selling", color: "bg-orange-500" },
         freeDelivery: true,
         installment: true
     },
@@ -544,6 +546,7 @@ const products = [
         images: ["/images/infinix-hot-60-i.jpg"],
         specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
         stock: 12,
+        badge: { text: "Hot Selling", color: "bg-orange-500" },
         installment: true,
         freeDelivery: true
     },
@@ -782,11 +785,35 @@ const products = [
         id: 85,
         name: "Realme Note 60X (4GB-64GB)",
         brand: "Realme",
-        price: 27999,
+        price: 31999,
         description: "An affordable entry into the Realme ecosystem, offering solid performance for everyday tasks.",
         images: ["/images/realme-note-60x.png"],
         specs: { ram: "4GB", storage: "64GB", battery: "5000 mAh" },
         stock: 20,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 92,
+        name: "Realme Note 60X (3GB-64GB)",
+        brand: "Realme",
+        price: 27999,
+        description: "An affordable entry into the Realme ecosystem, offering solid performance for everyday tasks.",
+        images: ["/images/realme-note-60x.png"],
+        specs: { ram: "3GB", storage: "64GB", battery: "5000 mAh" },
+        stock: 20,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 93,
+        name: "Realme Note 60X (4GB-128GB)",
+        brand: "Realme",
+        price: 35999,
+        description: "An affordable entry into the Realme ecosystem with more storage, offering solid performance for everyday tasks.",
+        images: ["/images/realme-note-60x.png"],
+        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 15,
         freeDelivery: true,
         installment: true
     },

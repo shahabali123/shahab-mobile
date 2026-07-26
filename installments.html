@@ -15,6 +15,14 @@
         .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
         .product-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+
+        /* Hot Selling Slider Styles */
+        .hot-selling-slider { display: flex; gap: 1rem; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 1rem; scrollbar-width: none; /* Firefox */ }
+        .hot-selling-slider::-webkit-scrollbar { display: none; /* Chrome, Safari, Opera */ }
+        .hot-selling-card { flex: 0 0 280px; transition: transform 0.3s; }
+        .hot-selling-card:hover { transform: scale(1.03); }
+        .hot-selling-card img { transition: transform 0.4s ease; }
+        .hot-selling-card:hover img { transform: scale(1.1); }
     </style>
 </head>
 <style>
@@ -176,6 +184,17 @@
             </div>
             <i class="fas fa-hand-holding-usd absolute -right-10 -bottom-10 text-[15rem] text-white opacity-5 rotate-12"></i>
         </div>
+
+        <!-- Hot Selling Slider -->
+        <section class="mb-16">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-3">
+                    <i class="fas fa-fire-alt text-orange-500"></i> Hot Selling on Installments
+                </h2>
+            </div>
+            <div id="hot-selling-slider-installments" class="hot-selling-slider">
+            </div>
+        </section>
 
         <!-- Installment Requirements Section -->
         <div class="mb-16 bg-white border-2 border-blue-100 rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-blue-50">
@@ -379,6 +398,7 @@
             document.getElementById('inst-advance-text').innerText = installmentConfig.advanceText;
             document.getElementById('inst-plans-text').innerText = installmentConfig.planSummary;
         }
+        renderHotSellingSlider('hot-selling-slider-installments');
         renderProducts(true, false);
         hideLoadingScreen();
     </script>

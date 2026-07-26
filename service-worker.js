@@ -4,6 +4,7 @@ const urlsToCache = [
     './index.html',
     './product.html', // Added for single product page
     './offers.html',
+    './guide.html',
     './installments.html',
     './manifest.json',
     './app.js',
