@@ -1243,19 +1243,19 @@ function renderPagination(totalItems) {
     const sortedPages = [...pagesToShow].sort((a, b) => a - b);
 
     // Previous Button
-    html += `<button onclick="changePage(${currentPage - 1})" class="px-4 h-10 rounded-xl font-bold transition bg-white border border-slate-200 text-slate-500 hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
+    html += `<button onclick="changePage(${currentPage - 1})" class="px-6 h-12 md:px-4 md:h-10 rounded-xl font-bold transition bg-white border border-slate-200 text-slate-500 hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
 
     let lastPage = 0;
     sortedPages.forEach(page => {
         if (lastPage > 0 && page - lastPage > 1) {
-            html += `<span class="w-10 h-10 flex items-center justify-center text-slate-400">...</span>`;
+            html += `<span class="w-10 h-10 hidden md:flex items-center justify-center text-slate-400">...</span>`;
         }
-        html += `<button onclick="changePage(${page})" class="w-10 h-10 rounded-xl font-bold transition ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-blue-600'}">${page}</button>`;
+        html += `<button onclick="changePage(${page})" class="w-12 h-12 md:w-10 md:h-10 rounded-xl font-bold transition hidden md:flex items-center justify-center ${currentPage === page ? 'bg-blue-600 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:border-blue-600'}">${page}</button>`;
         lastPage = page;
     });
 
     // Next Button
-    html += `<button onclick="changePage(${currentPage + 1})" class="px-4 h-10 rounded-xl font-bold transition bg-white border border-slate-200 text-slate-500 hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+    html += `<button onclick="changePage(${currentPage + 1})" class="px-6 h-12 md:px-4 md:h-10 rounded-xl font-bold transition bg-white border border-slate-200 text-slate-500 hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
 
     container.innerHTML = html;
 }
