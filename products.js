@@ -83,7 +83,9 @@ const products = [
         id: 17,
         name: "Samsung A17 (8GB-256GB)",
         brand: "Samsung",
-        price: 87500,
+        price: 79625,
+        originalPrice: 87500,
+        discountPercentage: 9,
         description: "High-end storage and powerful performance for power users with the Samsung Galaxy A17.",
         images: ["/images/samsung-a17.avif"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
@@ -116,11 +118,13 @@ const products = [
         id: 91, // Changed from 13 to avoid conflict
         name: "Samsung A55 5g (8GB-256GB)",
         brand: "Samsung",
-        price: 139999,
+        price: 126000,
+        originalPrice: 139999,
+        discountPercentage: 10,
         description: "Samsung Galaxy A55 5G delivers a premium experience with its vibrant 6.6-inch Super AMOLED display, powerful Exynos performance, and advanced triple-camera system for smooth everyday use and stunning photography.",
         images: ["/images/samsung-galaxy-a55-5g.avif"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
-        stock: 10,
+        stock: 1,
         freeDelivery: true
     },
     {
@@ -723,6 +727,19 @@ const products = [
         stock: 10,
         freeDelivery: true
     },
+    {
+        id: 94,
+        name: "ZTE Blade A35e (2GB-32GB)",
+        brand: "ZTE",
+        price: 23600,
+        originalPrice: 25000,
+        discountPercentage: 4,
+        description: "An ultra-affordable and reliable smartphone for essential daily tasks, featuring a compact design and long-lasting battery.",
+        images: ["/images/zte-blade-a35e.webp"], // Placeholder image
+        specs: { ram: "2GB", storage: "32GB", battery: "3000 mAh" },
+        stock: 10,
+        freeDelivery: true
+    },
 
     // =================================================================================
     // Digit
@@ -758,7 +775,9 @@ const products = [
         name: "Samsung 45W PD Adapter",
         brand: "Gadget",
         category: "Gadget",
-        price: 1499,
+        price: 1425,
+        originalPrice: 1499,
+        discountPercentage: 5,
         description: "45W ultra fast charging with samsung travel adapter.",
         images: ["/images/samsung-45w-pd-adapter.jpeg"],
         specs: { ram: "N/A", storage: "N/A", battery: "N/A" },
@@ -770,7 +789,9 @@ const products = [
         name: "12V Router Power Bank UPS",
         brand: "Gadget",
         category: "Gadget",
-        price: 2499,
+        price: 2375,
+        originalPrice: 2499,
+        discountPercentage: 5,
         description: "High-Power 12V Router Power Bank banaye rakhe aapka internet har waqt ON! Ye specially designed Router UPS Power Bank hai jo aapke WiFi Router, ONT, Fiber Modem ya CCTV ko 6 se 10 ghantay tak ka backup deta hai. Light shedding ya bijli jane par bhi aapka internet uninterrupted chalta rahega. Plug & Play design ke sath bilkul easy to use – koi complex setup nahi chahiye. Perfect for PTCL, StormFiber, Nayatel, Optix, aur doosre 12V routers.",
         images: ["/images/router-power-bank.jpeg"],
         specs: { ram: "N/A", storage: "N/A", battery: "2500 mAh" },

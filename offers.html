@@ -107,9 +107,10 @@
                 <div class="flex gap-2 md:gap-4 items-center shrink-0">
                     <div class="hidden md:flex gap-6 mr-4 font-semibold text-slate-600">
                         <a href="index.html" class="hover:text-blue-600 transition">Home</a>
-                        <a href="offers.html" class="hover:text-blue-600 transition text-red-500 font-bold border-b-2 border-red-500 focus:border-red-500">Offers</a>
+                        <a href="offers.html" class="hover:text-blue-600 transition text-red-500 font-bold border-b-2 border-red-500">Offers</a>
                         <a href="installments.html" class="hover:text-blue-600 transition">Installments</a>
                         <a href="calculator.html" class="hover:text-blue-600 transition">Calculator</a>
+                        <a href="guide.html" class="hover:text-blue-600 transition">AI Guide</a>
                         <a href="gadgets.html" class="hover:text-blue-600 transition">Gadgets</a>
                     </div>
                     
@@ -145,6 +146,7 @@
                     <a href="offers.html" class="flex items-center gap-4 text-red-500 p-3 bg-red-50 rounded-2xl"><i class="fas fa-tags w-6"></i> Latest Offers</a>
                     <a href="installments.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-calendar-alt w-6"></i> Installment Plans</a>
                     <a href="calculator.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-calculator w-6"></i> Calculator</a>
+                    <a href="guide.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-robot w-6"></i> AI Guide</a>
                     <a href="gadgets.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-plug w-6"></i> Gadgets</a>
                     <div class="h-[1px] bg-slate-100 my-2"></div>
                     <a href="index.html#product-grid" onclick="toggleMobileMenu()" class="flex items-center gap-4 hover:text-blue-600 transition p-3 text-base"><i class="fas fa-th-large w-6"></i> Our Collection</a>
@@ -175,7 +177,7 @@
     <div class="container mx-auto px-6 py-12">
         <div class="mb-10 text-center md:text-left">
             <h2 class="text-3xl md:text-5xl font-black text-slate-900 mb-4">Hot Offers & Deals 🔥</h2>
-            <p class="text-slate-500 max-w-2xl">Get the best prices and exclusive free delivery on these top models.</p>
+            <p class="text-slate-500 max-w-2xl">Get exclusive discounts on these top models. These are limited-time deals, so act fast!</p>
         </div>
         <!-- Countdown Banner -->
         <div class="col-span-full bg-gradient-to-r from-red-600 to-orange-500 rounded-[2rem] p-8 md:p-12 text-white mb-8 shadow-2xl shadow-red-200 flex flex-col md:flex-row items-center justify-between gap-8">
@@ -308,7 +310,10 @@
     <script>
         initApp(); // App ko initialize karein
         window.filterOnlyOffers = true;
-        startCountdown("2026-07-10T23:59:59", "offer-countdown-timer");
+        // Automatically set countdown to the end of the current month
+        const now = new Date();
+        const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+        startCountdown(endOfMonth.toISOString(), "offer-countdown-timer");
         renderProducts(true, false);
         hideLoadingScreen();
     </script>

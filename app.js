@@ -71,6 +71,13 @@ function initApp() {
     });
 
     updateCartCount(); // This also calls renderCart()
+
+    // Start showing fake purchase popups after an initial delay
+    setTimeout(() => {
+        showFakePurchasePopup(); // Show one immediately
+        // Show subsequent popups at random intervals between 20 and 45 seconds
+        setInterval(showFakePurchasePopup, Math.random() * (45000 - 20000) + 20000);
+    }, 15000); // Start after 15 seconds of page load
 }
 
 /**
@@ -84,6 +91,10 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
         const mainBtnHtml = isInstallmentsPage 
             ? `<button onclick="event.stopPropagation(); inquireInstallment(${product.id})" class="flex-grow bg-slate-900 text-white py-3 rounded-xl font-bold text-[10px] hover:bg-slate-800 transition shadow-lg flex items-center justify-center gap-1"><i class="fas fa-hand-holding-usd text-blue-400"></i> Inquire Plan</button>`
             : `<button onclick="event.stopPropagation(); addToCart(${product.id})" class="flex-grow bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-lg shadow-blue-100">Add to Cart</button>`;
+        
+        const priceHtml = product.originalPrice
+            ? `<div class="flex items-baseline gap-2"><p class="text-xl font-extrabold text-red-600">Rs. ${product.price.toLocaleString()}</p><p class="text-sm font-bold text-slate-400 line-through">Rs. ${product.originalPrice.toLocaleString()}</p></div>`
+            : `<p class="text-xl font-extrabold text-slate-900">Rs. ${product.price.toLocaleString()}</p>`;
 
         return `
         <div class="product-card reveal-item bg-white rounded-3xl p-5 border border-slate-100 group relative perspective-1000"
@@ -91,6 +102,7 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
              onclick="savePageAndRedirect('${product.slug}')">
             <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
                 ${product.badge ? `<span class="${product.badge.color} text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">${product.badge.text}</span>` : ''}
+                ${product.discountPercentage ? `<span class="bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1"><i class="fas fa-arrow-down"></i> ${product.discountPercentage}% OFF</span>` : ''}
                 ${product.freeDelivery ? '<span class="bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg shadow-green-100">FREE DELIVERY</span>' : ''}
                 ${product.installment ? '<span class="bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1"><i class="fas fa-calendar-alt text-[8px]"></i> Installment</span>' : ''}
                 ${product.installmentText ? `<span class="bg-indigo-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">${product.installmentText}</span>` : ''}
@@ -109,8 +121,9 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
             <p class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-1" onclick="event.stopPropagation(); savePageAndRedirect('${product.slug}')">${product.brand}</p>
             <h3 class="font-bold text-slate-800 mb-2 truncate cursor-pointer hover:text-blue-600" title="${product.name}" onclick="savePageAndRedirect('${product.slug}')">${product.name}</h3>
             <div class="flex justify-between items-center mb-4">
-                <p class="text-xl font-extrabold text-slate-900">Rs. ${product.price.toLocaleString()}</p>
+                ${priceHtml}
             </div>
+            ${product.originalPrice ? `<div class="text-xs font-bold text-green-600 bg-green-50 p-2 rounded-lg mb-4 border border-green-100">You save Rs. ${(product.originalPrice - product.price).toLocaleString()}!</div>` : ''}
             <div class="flex gap-2 relative z-20">
                 ${mainBtnHtml}
                 <button onclick="event.stopPropagation(); toggleCompare(${product.id})" class="w-12 h-12 flex items-center justify-center rounded-xl border-2 ${compareList.includes(product.id) ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-100 text-slate-400 hover:border-blue-600 hover:text-blue-600'} transition">
@@ -166,7 +179,8 @@ function renderProducts(resetPage = false, shouldScroll = false) {
 
     // Apply Offers Filter (if on offers page)
     if (window.filterOnlyOffers) {
-        filtered = filtered.filter(p => p.freeDelivery === true);
+        // Show only products that have a discount.
+        filtered = filtered.filter(p => p.originalPrice);
     }
 
     // Apply Global Installment Page Filter
@@ -704,6 +718,14 @@ function initProductPage() {
     // Render full page content
     const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advancePercentage: 20, plans: [] };
     const advanceOptionsForPage = getAdvanceOptionsForPrice(p.price);
+
+    const priceHtmlOnPage = p.originalPrice
+    ? `<div class="flex items-baseline gap-4 mb-4">
+           <p class="text-4xl font-black text-red-600">Rs. ${p.price.toLocaleString()}</p>
+           <p class="text-2xl font-bold text-slate-400 line-through">Rs. ${p.originalPrice.toLocaleString()}</p>
+       </div>`
+    : `<p class="text-3xl font-bold text-blue-600 mb-8">Rs. ${p.price.toLocaleString()}</p>`;
+
     container.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 w-full">
             <div class="bg-slate-50 p-8 md:p-12 flex flex-col gap-6 items-center">
@@ -721,9 +743,14 @@ function initProductPage() {
                 </div>
             </div>
             <div class="p-8 md:p-12 lg:p-16 flex flex-col justify-center relative">
-                <span class="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 w-fit">${p.brand}</span>
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <span class="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">${p.brand}</span>
+                    ${p.discountPercentage ? `<span class="bg-red-100 text-red-600 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest flex items-center gap-1"><i class="fas fa-arrow-down"></i> ${p.discountPercentage}% OFF</span>` : ''}
+                </div>
                 <h2 class="text-4xl md:text-5xl font-black mb-4 text-slate-900">${p.name}</h2>
-                <p class="text-3xl font-bold text-blue-600 mb-8">Rs. ${p.price.toLocaleString()}</p>
+                
+                ${priceHtmlOnPage}
+                ${p.originalPrice ? `<div class="text-base font-bold text-green-700 bg-green-100 p-4 rounded-2xl mb-8 border border-green-200 w-fit">Congratulations! You save <span class="text-lg">Rs. ${(p.originalPrice - p.price).toLocaleString()}</span> on this deal!</div>` : ''}
 
                 ${p.offerEndDate ? `
                     <div class="mb-8 p-4 bg-red-50 rounded-2xl border border-red-100 flex items-center justify-between gap-4">
@@ -1416,4 +1443,44 @@ function showMoreRecommendedPhones() {
     if (guideCurrentIndex >= guideRecommendedPhones.length) {
         showMoreContainer.classList.add('hidden');
     }
+}
+
+// =================================================================================
+// Social Proof Popups
+// =================================================================================
+
+const pakistaniNames = ["Ali", "Ahmed", "Fatima", "Ayesha", "Bilal", "Sana", "Usman", "Hina", "Faisal", "Sadia", "Imran", "Nida", "Zain", "Kiran", "Haris", "Maria", "Saad", "Rabia"];
+
+function showFakePurchasePopup() {
+    const popup = document.getElementById('purchase-popup');
+    if (!popup) return;
+
+    // Pick a random name
+    const randomName = pakistaniNames[Math.floor(Math.random() * pakistaniNames.length)];
+
+    // Pick a random, popular phone (not a gadget)
+    const availablePhones = products.filter(p => p.category !== 'Gadget' && p.stock > 0 && p.price > 25000);
+    if (availablePhones.length === 0) return;
+    const randomProduct = availablePhones[Math.floor(Math.random() * availablePhones.length)];
+
+    // Populate the popup
+    popup.innerHTML = `
+        <img src="${randomProduct.images[0]}" class="w-14 h-14 object-contain rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-sm">
+        <div class="flex-grow">
+            <p class="font-bold text-sm text-slate-800">${randomName} from Mansehra</p>
+            <p class="text-xs text-slate-600 mt-0.5">just purchased a <span class="font-bold text-blue-600">${randomProduct.name}</span></p>
+            <p class="text-[10px] text-slate-400 mt-1.5">a few moments ago</p>
+        </div>
+        <button onclick="this.parentElement.style.display='none'" class="absolute top-1 right-2 text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+    `;
+
+    // Show the popup
+    popup.classList.remove('hidden', 'translate-y-24', 'opacity-0');
+    popup.style.display = 'flex';
+
+    // Hide it after some time
+    setTimeout(() => {
+        popup.classList.add('translate-y-24', 'opacity-0');
+        setTimeout(() => { popup.style.display = 'none'; }, 500); // Hide completely after transition
+    }, 6000); // Keep on screen for 6 seconds
 }

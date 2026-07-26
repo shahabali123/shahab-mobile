@@ -177,10 +177,11 @@
 
                 <div class="flex gap-2 md:gap-4 items-center shrink-0">
                     <div class="hidden md:flex gap-6 mr-4 font-semibold text-slate-600">
-                        <a href="index.html" class="hover:text-blue-600 transition text-blue-600 border-b-2 border-blue-600">Home</a>
+                        <a href="index.html" class="hover:text-blue-600 transition text-blue-600 font-bold border-b-2 border-blue-600">Home</a>
                         <a href="offers.html" class="hover:text-blue-600 transition">Offers</a>
                         <a href="installments.html" class="hover:text-blue-600 transition">Installments</a>
                         <a href="calculator.html" class="hover:text-blue-600 transition">Calculator</a>
+                        <a href="guide.html" class="hover:text-blue-600 transition">AI Guide</a>
                         <a href="gadgets.html" class="hover:text-blue-600 transition">Gadgets</a>
                     </div>
                     
@@ -216,6 +217,7 @@
                     <a href="offers.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-tags w-6"></i> Latest Offers</a>
                     <a href="installments.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-calendar-alt w-6"></i> Installment Plans</a>
                     <a href="calculator.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-calculator w-6"></i> Calculator</a>
+                    <a href="guide.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-robot w-6"></i> AI Guide</a>
                     <a href="gadgets.html" class="flex items-center gap-4 hover:text-blue-600 transition p-3"><i class="fas fa-plug w-6"></i> Gadgets</a>
                     <div class="h-[1px] bg-slate-100 my-2"></div>
                     <a href="index.html#product-grid" onclick="toggleMobileMenu()" class="flex items-center gap-4 hover:text-blue-600 transition p-3 text-base"><i class="fas fa-th-large w-6"></i> Our Collection</a>
@@ -424,6 +426,12 @@
         </div>
     </footer>
 
+    <!-- Social Proof Popup -->
+    <div id="purchase-popup" class="fixed bottom-6 left-6 bg-white/80 backdrop-blur-lg border border-slate-200 rounded-2xl shadow-2xl p-4 w-80 z-[100] hidden items-center gap-4 transition-all duration-500 ease-out">
+        <!-- Content is injected by JS -->
+    </div>
+
+
     <script src="products.js"></script> <!-- Product data pehle -->
     <script src="app.js"></script> <!-- Functions baad mein -->
     <script src="hero.js"></script> <!-- Hero script -->
@@ -452,7 +460,10 @@
         }
 
         hideLoadingScreen();
-        startCountdown("2026-07-10T23:59:59", "home-countdown-timer");
+        // Automatically set countdown to the end of the current month
+        const now = new Date();
+        const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+        startCountdown(endOfMonth.toISOString(), "home-countdown-timer");
     </script>
 </body>
 </html>
