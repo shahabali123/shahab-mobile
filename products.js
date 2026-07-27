@@ -852,10 +852,22 @@ const products = [
     },
     {
         id: 61,
-        name: "Realme Note 70 (6GB-128GB)",
+        name: "Realme Note 70 (4GB-128GB)",
         brand: "Realme",
         price: 39999,
         description: "Reliable daily driver with a large display and smooth performance.",
+        images: ["/images/realme-note-70.jpg"],
+        specs: { ram: "4GB", storage: "128GB", battery: "5000 mAh" },
+        stock: 12,
+        freeDelivery: true,
+        installment: true
+    },
+    {
+        id: 95,
+        name: "Realme Note 70 (6GB-128GB)",
+        brand: "Realme",
+        price: 41999,
+        description: "Reliable daily driver with a large display and smooth performance, now with more RAM.",
         images: ["/images/realme-note-70.jpg"],
         specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
         stock: 12,
