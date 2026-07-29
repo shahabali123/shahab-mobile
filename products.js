@@ -355,7 +355,7 @@ const products = [
         id: 30,
         name: "Tecno Spark 40 Pro (8GB-256GB)",
         brand: "Tecno",
-        price: 64999,
+        price: 66999,
         description: "Stylish design with powerful specs. The Spark 40 Pro features a massive display and excellent cameras.",
         images: ["/images/tecno-spark-40-pro.webp"],
         specs: { ram: "8GB", storage: "256GB", battery: "5000 mAh" },
