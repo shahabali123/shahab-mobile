@@ -545,7 +545,7 @@ const products = [
         id: 42,
         name: "Infinix Hot 60i (6GB-128GB)",
         brand: "Infinix",
-        price: 54999,
+        price: 61999,
         description: "The Infinix Hot 60i delivers smooth performance and a vibrant display, perfect for daily multitasking and media.",
         images: ["/images/infinix-hot-60-i.jpg"],
         specs: { ram: "6GB", storage: "128GB", battery: "5000 mAh" },
