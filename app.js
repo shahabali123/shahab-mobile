@@ -1375,8 +1375,8 @@ function renderHotSellingSlider(containerId) {
     container.innerHTML = hotItems.map(p => `
         <div class="hot-selling-card bg-white rounded-3xl p-5 border border-slate-100 shadow-lg shadow-slate-100/50 cursor-pointer" onclick="savePageAndRedirect('${p.slug}')">
             <div class="aspect-square bg-slate-50 rounded-2xl mb-4 overflow-hidden flex items-center justify-center relative loading-image-container">
-                <div class="image-loader"><i class="fas fa-spinner fa-spin"></i></div>
-                <img src="${p.images[0]}" class="w-4/5 h-4/5 object-contain">
+                <div class="image-loader"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
+                <img src="${p.images[0]}" class="w-4/5 h-4/5 object-contain" onload="this.parentElement.classList.add('loaded')">
                 <span class="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">${p.badge.text}</span>
             </div>
             <h4 class="font-bold text-slate-800 truncate">${p.name}</h4>
