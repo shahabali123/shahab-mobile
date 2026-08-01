@@ -1,6 +1,8 @@
 // State Management
 let cart = JSON.parse(localStorage.getItem('shahab_cart')) || [];
 let compareList = JSON.parse(localStorage.getItem('shahab_compare')) || [];
+const HIDE_PRICES = true; // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-
+const PRICE_HIDDEN_MESSAGE = "Prices are being updated. Call for details.";
 let currentPage = 1;
 let lightboxImages = [];
 let lightboxIndex = 0;
@@ -92,7 +94,9 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
             ? `<button onclick="event.stopPropagation(); inquireInstallment(${product.id})" class="flex-grow bg-slate-900 text-white py-3 rounded-xl font-bold text-[10px] hover:bg-slate-800 transition shadow-lg flex items-center justify-center gap-1"><i class="fas fa-hand-holding-usd text-blue-400"></i> Inquire Plan</button>`
             : `<button onclick="event.stopPropagation(); addToCart(${product.id})" class="flex-grow bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow-lg shadow-blue-100">Add to Cart</button>`;
         
-        const priceHtml = product.originalPrice
+        const priceHtml = HIDE_PRICES
+            ? `<p class="text-sm font-bold text-blue-600">${PRICE_HIDDEN_MESSAGE}</p>`
+            : product.originalPrice
             ? `<div class="flex items-baseline gap-2"><p class="text-xl font-extrabold text-red-600">Rs. ${product.price.toLocaleString()}</p><p class="text-sm font-bold text-slate-400 line-through">Rs. ${product.originalPrice.toLocaleString()}</p></div>`
             : `<p class="text-xl font-extrabold text-slate-900">Rs. ${product.price.toLocaleString()}</p>`;
 
@@ -123,7 +127,9 @@ function createProductCardHtml(product, isInstallmentsPage = false) {
             <div class="flex justify-between items-center mb-4">
                 ${priceHtml}
             </div>
-            ${product.originalPrice ? `<div class="text-xs font-bold text-green-600 bg-green-50 p-2 rounded-lg mb-4 border border-green-100">You save Rs. ${(product.originalPrice - product.price).toLocaleString()}!</div>` : ''}
+            ${!HIDE_PRICES && product.originalPrice 
+                ? `<div class="text-xs font-bold text-green-600 bg-green-50 p-2 rounded-lg mb-4 border border-green-100">You save Rs. ${(product.originalPrice - product.price).toLocaleString()}!</div>` 
+                : ''}
             <div class="flex gap-2 relative z-20">
                 ${mainBtnHtml}
                 <button onclick="event.stopPropagation(); toggleCompare(${product.id})" class="w-12 h-12 flex items-center justify-center rounded-xl border-2 ${compareList.includes(product.id) ? 'bg-slate-900 border-slate-900 text-white' : 'border-slate-100 text-slate-400 hover:border-blue-600 hover:text-blue-600'} transition">
@@ -331,7 +337,9 @@ function openCompareModal() {
         <div class="bg-slate-50 p-3 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100 flex flex-col items-center text-center">
             <img src="${p.images[0]}" class="w-20 h-20 md:w-32 md:h-32 object-contain mb-3 md:mb-4 rounded-xl">
             <h4 class="font-bold text-xs md:text-lg mb-1 md:mb-2 text-slate-800 line-clamp-2 min-h-[2.5rem]">${p.name}</h4>
-            <p class="text-sm md:text-2xl font-black text-blue-600 mb-4 md:mb-6">Rs. ${p.price.toLocaleString()}</p>
+            <p class="text-sm md:text-2xl font-black text-blue-600 mb-4 md:mb-6">
+                ${HIDE_PRICES ? PRICE_HIDDEN_MESSAGE : `Rs. ${p.price.toLocaleString()}`}
+            </p>
             <div class="w-full space-y-2 md:space-y-3">
                 <div class="bg-white p-2 md:p-3 rounded-lg md:rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center md:items-start gap-1"><span class="text-slate-400 text-[8px] md:text-xs font-bold">RAM</span> <span class="font-bold text-[10px] md:text-sm">${p.specs.ram}</span></div>
                 <div class="bg-white p-2 md:p-3 rounded-lg md:rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center md:items-start gap-1"><span class="text-slate-400 text-[8px] md:text-xs font-bold">STORAGE</span> <span class="font-bold text-[10px] md:text-sm">${p.specs.storage}</span></div>
@@ -396,7 +404,9 @@ function renderCart() {
                 <img src="${item.images[0]}" class="w-16 h-16 object-contain">
                 <div class="flex-grow">
                     <h4 class="font-bold text-sm">${item.name}</h4>
-                    <p class="text-blue-600 font-bold text-sm">Rs. ${item.price.toLocaleString()}</p>
+                    <p class="text-blue-600 font-bold text-sm">
+                        ${HIDE_PRICES ? PRICE_HIDDEN_MESSAGE : `Rs. ${item.price.toLocaleString()}`}
+                    </p>
                     <div class="flex items-center gap-3 mt-2">
                         <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 rounded-full bg-slate-100">-</button>
                         <span class="font-bold">${item.quantity}</span>
@@ -405,8 +415,8 @@ function renderCart() {
                 </div>
             </div>
         `;
-    }).join('');
-    totalEl.innerText = total.toLocaleString();
+    }).join('') || `<p class="text-center text-slate-500">Your cart is empty.</p>`;
+    totalEl.innerText = HIDE_PRICES ? "N/A" : total.toLocaleString();
 }
 
 function changeQty(id, delta) {
@@ -425,7 +435,9 @@ function checkoutWhatsApp() {
     if (cart.length === 0) return alert("Cart is empty");
     let text = "Hello Shahab Mobile, I want to order:\n\n";
     cart.forEach(item => text += `• ${item.name} x ${item.quantity} (Rs. ${(item.price * item.quantity).toLocaleString()})\n`);
-    text += `\nTotal: Rs. ${document.getElementById('cart-total').innerText}`;
+    if (!HIDE_PRICES) {
+        text += `\nTotal: Rs. ${document.getElementById('cart-total').innerText}`;
+    }
     window.open(`https://wa.me/923420475187?text=${encodeURIComponent(text)}`);
 }
 
@@ -507,7 +519,9 @@ function handleSearch(e) {
                 <img src="${p.images[0]}" class="w-12 h-12 object-contain rounded-lg">
                 <div>
                     <p class="font-bold text-slate-800 text-sm">${p.name}</p> 
-                    <p class="text-blue-600 font-bold text-xs">Rs. ${p.price.toLocaleString()}</p>
+                    <p class="text-blue-600 font-bold text-xs">
+                        ${HIDE_PRICES ? PRICE_HIDDEN_MESSAGE : `Rs. ${p.price.toLocaleString()}`}
+                    </p>
                 </div>
             </div>
         `).join('');
@@ -530,7 +544,7 @@ function showDetails(id) {
     currentLightboxProduct = p; // Store the product for the lightbox
 
     document.getElementById('modal-title').innerText = p.name;
-    document.getElementById('modal-price').innerText = `Rs. ${p.price.toLocaleString()}`;
+    document.getElementById('modal-price').innerText = HIDE_PRICES ? PRICE_HIDDEN_MESSAGE : `Rs. ${p.price.toLocaleString()}`;
     document.getElementById('modal-desc').innerText = p.description;
     
     const brandBadge = document.getElementById('modal-brand-badge');
@@ -670,12 +684,14 @@ function initProductPage() {
     currentLightboxProduct = p; // Store the product for the lightbox
 
     // Update SEO Metadata
-    const pageTitle = `${p.name} - Rs. ${p.price.toLocaleString()} | Shahab Mobile`;
-    const pageDescription = `Buy ${p.name} for Rs. ${p.price.toLocaleString()} at Shahab Mobile Mansehra. ${p.description}`;
+    const priceText = HIDE_PRICES ? "Call for Price" : `Rs. ${p.price.toLocaleString()}`;
+    const pageTitle = `${p.name} - ${priceText} | Shahab Mobile`;
+    const pageDescription = `Buy ${p.name} for ${priceText} at Shahab Mobile Mansehra. ${p.description}`;
     const pageUrl = window.location.href;
     const imageUrl = new URL(p.images[0], window.location.origin).href;
 
     document.title = pageTitle;
+    document.querySelector('meta[name="description"]').setAttribute('content', pageDescription);
     document.querySelector('meta[name="description"]')?.setAttribute('content', pageDescription);
     document.querySelector('link[rel="canonical"]')?.setAttribute('href', pageUrl);
     document.querySelector('meta[property="og:title"]')?.setAttribute('content', pageTitle);
@@ -719,12 +735,14 @@ function initProductPage() {
     const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { advancePercentage: 20, plans: [] };
     const advanceOptionsForPage = getAdvanceOptionsForPrice(p.price);
 
-    const priceHtmlOnPage = p.originalPrice
-    ? `<div class="flex items-baseline gap-4 mb-4">
-           <p class="text-4xl font-black text-red-600">Rs. ${p.price.toLocaleString()}</p>
-           <p class="text-2xl font-bold text-slate-400 line-through">Rs. ${p.originalPrice.toLocaleString()}</p>
-       </div>`
-    : `<p class="text-3xl font-bold text-blue-600 mb-8">Rs. ${p.price.toLocaleString()}</p>`;
+    const priceHtmlOnPage = HIDE_PRICES
+        ? `<p class="text-2xl font-bold text-blue-600 mb-8">${PRICE_HIDDEN_MESSAGE}</p>`
+        : p.originalPrice
+        ? `<div class="flex items-baseline gap-4 mb-4">
+               <p class="text-4xl font-black text-red-600">Rs. ${p.price.toLocaleString()}</p>
+               <p class="text-2xl font-bold text-slate-400 line-through">Rs. ${p.originalPrice.toLocaleString()}</p>
+           </div>`
+        : `<p class="text-3xl font-bold text-blue-600 mb-8">Rs. ${p.price.toLocaleString()}</p>`;
 
     container.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 w-full">
@@ -750,7 +768,9 @@ function initProductPage() {
                 <h2 class="text-4xl md:text-5xl font-black mb-4 text-slate-900">${p.name}</h2>
                 
                 ${priceHtmlOnPage}
-                ${p.originalPrice ? `<div class="text-base font-bold text-green-700 bg-green-100 p-4 rounded-2xl mb-8 border border-green-200 w-fit">Congratulations! You save <span class="text-lg">Rs. ${(p.originalPrice - p.price).toLocaleString()}</span> on this deal!</div>` : ''}
+                ${!HIDE_PRICES && p.originalPrice 
+                    ? `<div class="text-base font-bold text-green-700 bg-green-100 p-4 rounded-2xl mb-8 border border-green-200 w-fit">Congratulations! You save <span class="text-lg">Rs. ${(p.originalPrice - p.price).toLocaleString()}</span> on this deal!</div>` 
+                    : ''}
 
                 ${p.offerEndDate ? `
                     <div class="mb-8 p-4 bg-red-50 rounded-2xl border border-red-100 flex items-center justify-between gap-4">
@@ -876,7 +896,7 @@ function shareProduct(productId) {
     }
 
     const shareUrl = window.location.href; // Direct link to this specific product page
-    const shareTitle = `${p.name} - Rs. ${p.price.toLocaleString()}`;
+    const shareTitle = `${p.name} - ${HIDE_PRICES ? "Price on request" : `Rs. ${p.price.toLocaleString()}`}`;
 
     if (navigator.share) {
         // Use Web Share API on mobile
@@ -917,7 +937,9 @@ function handleCalculatorSearch(e) {
                 <img src="${p.images[0]}" class="w-12 h-12 object-contain rounded-lg">
                 <div>
                     <p class="font-bold text-slate-800 text-sm">${p.name}</p>
-                    <p class="text-blue-600 font-bold text-xs">Rs. ${p.price.toLocaleString()}</p>
+                    <p class="text-blue-600 font-bold text-xs">
+                        ${HIDE_PRICES ? PRICE_HIDDEN_MESSAGE : `Rs. ${p.price.toLocaleString()}`}
+                    </p>
                 </div>
             </div>
         `).join('');
@@ -928,24 +950,49 @@ function handleCalculatorSearch(e) {
     }
 }
 
-function renderCalculatorDetails(productIdentifier) {
-    const p = products.find(product => product.id === productIdentifier || product.slug === productIdentifier);
-    if (!p) return;
-
+function renderCalculatorForPrice(price, productName = "Custom Device") {
     const resultContainer = document.getElementById('calculator-result');
     const initialMsg = document.getElementById('calculator-initial-message');
     const suggestions = document.getElementById('calculator-suggestions');
     const searchInput = document.getElementById('calculator-search');
 
+    if (!resultContainer || !initialMsg || !suggestions || !searchInput) return;
+
+    if (!price || price <= 0) {
+        showToast("Please enter a valid price.", "error");
+        return;
+    }
+
     // Hide initial message and suggestions, update search bar
     initialMsg.classList.add('hidden');
     suggestions.classList.add('hidden');
-    searchInput.value = p.name;
+    searchInput.value = productName;
 
     const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { plans: [] };
-    const advanceOptions = getAdvanceOptionsForPrice(p.price);
+    const advanceOptions = getAdvanceOptionsForPrice(price);
 
     let html = `
+        <!-- Selected Product -->
+        <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-lg flex flex-col md:flex-row items-center gap-8 animate-in fade-in duration-500">
+            <div class="w-32 h-32 rounded-2xl bg-slate-50 p-2 flex items-center justify-center">
+                <i class="fas fa-mobile-alt text-6xl text-slate-300"></i>
+            </div>
+            <div class="flex-grow text-center md:text-left">
+                <h2 class="text-3xl font-black text-slate-900 mt-1">${productName}</h2>
+                <p class="text-2xl font-bold text-slate-700 mt-2">Total Price: <span class="text-blue-600">Rs. ${price.toLocaleString()}</span></p>
+            </div>
+        </div>
+        <!-- The rest of the calculation table will be generated by renderCalculatorForPrice -->
+    `;
+    resultContainer.innerHTML = html + generateCalculatorTables(price);
+}
+
+function renderCalculatorDetails(productIdentifier) {
+    const p = products.find(product => product.id === productIdentifier || product.slug === productIdentifier);
+    if (!p) return;
+
+    const resultContainer = document.getElementById('calculator-result');
+    resultContainer.innerHTML = `
         <!-- Selected Product -->
         <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-lg flex flex-col md:flex-row items-center gap-8 animate-in fade-in duration-500">
             <img src="${p.images[0]}" alt="${p.name}" class="w-32 h-32 object-contain rounded-2xl bg-slate-50 p-2">
@@ -956,7 +1003,16 @@ function renderCalculatorDetails(productIdentifier) {
             </div>
         </div>
 
-        <!-- Installment Plans -->
+        ${generateCalculatorTables(p.price)}
+    `;
+
+    renderCalculatorForPrice(p.price, p.name);
+}
+
+function generateCalculatorTables(price) {
+    const config = typeof installmentConfig !== 'undefined' ? installmentConfig : { plans: [] };
+    const advanceOptions = getAdvanceOptionsForPrice(price);
+    return `
         <div class="space-y-8">
             ${config.plans.map(plan => {
                 return `
@@ -975,9 +1031,9 @@ function renderCalculatorDetails(productIdentifier) {
                             </thead>
                             <tbody>
                                 ${advanceOptions.map(advPercent => {
-                                    const downPayment = Math.round(p.price * (advPercent / 100));
-                                    const { emi, totalCost } = calculateInstallmentDetails(p.price, advPercent, plan.months);
-                                    const extraCharges = totalCost - p.price;
+                                    const downPayment = Math.round(price * (advPercent / 100));
+                                    const { emi, totalCost } = calculateInstallmentDetails(price, advPercent, plan.months);
+                                    const extraCharges = totalCost - price;
 
                                     return `
                                     <tr class="border-t border-slate-200">
@@ -997,8 +1053,6 @@ function renderCalculatorDetails(productIdentifier) {
             }).join('')}
         </div>
     `;
-
-    resultContainer.innerHTML = html;
 }
 
 function updateMainImage(index) {
@@ -1056,7 +1110,9 @@ function openLightbox(identifier) {
         lightboxDetails.innerHTML = `
             <span class="bg-white/10 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 w-fit">${p.brand}</span>
             <h2 class="text-4xl font-black mb-4">${p.name}</h2>
-            <p class="text-3xl font-bold text-blue-400 mb-6">Rs. ${p.price.toLocaleString()}</p>
+            <p class="text-3xl font-bold text-blue-400 mb-6">
+                ${HIDE_PRICES ? PRICE_HIDDEN_MESSAGE : `Rs. ${p.price.toLocaleString()}`}
+            </p>
             <p class="text-slate-400 leading-relaxed line-clamp-4">${p.description}</p>
         `;
     }
@@ -1318,12 +1374,15 @@ function renderHotSellingSlider(containerId) {
 
     container.innerHTML = hotItems.map(p => `
         <div class="hot-selling-card bg-white rounded-3xl p-5 border border-slate-100 shadow-lg shadow-slate-100/50 cursor-pointer" onclick="savePageAndRedirect('${p.slug}')">
-            <div class="aspect-square bg-slate-50 rounded-2xl mb-4 overflow-hidden flex items-center justify-center relative">
+            <div class="aspect-square bg-slate-50 rounded-2xl mb-4 overflow-hidden flex items-center justify-center relative loading-image-container">
+                <div class="image-loader"><i class="fas fa-spinner fa-spin"></i></div>
                 <img src="${p.images[0]}" class="w-4/5 h-4/5 object-contain">
                 <span class="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">${p.badge.text}</span>
             </div>
             <h4 class="font-bold text-slate-800 truncate">${p.name}</h4>
-            <p class="text-lg font-extrabold text-slate-900">Rs. ${p.price.toLocaleString()}</p>
+            <p class="text-lg font-extrabold text-slate-900">
+                ${HIDE_PRICES ? PRICE_HIDDEN_MESSAGE : `Rs. ${p.price.toLocaleString()}`}
+            </p>
         </div>
     `).join('');
 

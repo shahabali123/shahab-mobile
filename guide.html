@@ -118,13 +118,21 @@
 
             <!-- Input Form -->
             <div class="bg-white p-8 rounded-3xl border-2 border-slate-100 shadow-xl shadow-slate-100/50 mb-12">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-end">
                     <!-- Budget -->
-                    <div class="lg:col-span-1">
+                    <div class="lg:col-span-2">
                         <label for="guide-budget" class="block text-sm font-bold text-slate-600 mb-2">Aapka Budget (PKR)?</label>
                         <input type="number" id="guide-budget" placeholder="e.g., 50000" class="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 outline-none transition-all text-lg font-semibold">
                     </div>
-                    <!-- Brand -->
+                    <!-- Button -->
+                    <div class="lg:col-span-1">
+                        <button onclick="findRecommendedPhone()" class="w-full bg-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-purple-700 transition shadow-lg shadow-purple-200 flex items-center justify-center gap-3">
+                            <i class="fas fa-search"></i> Find Phone
+                        </button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-end mt-4">
+                     <!-- Brand -->
                     <div class="lg:col-span-1">
                         <label for="guide-brand" class="block text-sm font-bold text-slate-600 mb-2">Pasandeeda Brand?</label>
                         <select id="guide-brand" class="w-full bg-slate-50 border-2 border-slate-200 p-4 rounded-xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 outline-none transition-all text-lg font-semibold appearance-none bg-no-repeat bg-right-4" style="background-image: url('data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e'); background-position: right 1rem center; background-size: 1.5em 1.5em;">
@@ -149,12 +157,6 @@
                             <input type="checkbox" id="guide-installments" class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500 border-slate-300">
                             <span class="font-bold text-slate-600 text-sm">Installments Only</span>
                         </label>
-                    </div>
-                    <!-- Button -->
-                    <div class="lg:col-span-1">
-                        <button onclick="findRecommendedPhone()" class="w-full bg-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-purple-700 transition shadow-lg shadow-purple-200 flex items-center justify-center gap-3">
-                            <i class="fas fa-search"></i> Find Phone
-                        </button>
                     </div>
                 </div>
             </div>
