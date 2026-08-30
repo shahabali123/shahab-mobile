@@ -485,9 +485,9 @@ function calculateInstallmentDetails(price, advancePercentage, months) {
  * @returns {number[]} An array of advance percentages.
  */
 function getAdvanceOptionsForPrice(price) {
-    if (price <= 40000) {
+    if (price <= 50000) {
         return [20, 30, 50];
-    } else if (price > 40000 && price <= 60000) {
+    } else if (price > 50000 && price <= 60000) {
         return [25, 35, 50];
     } else if (price > 60000 && price <= 80000) {
         return [30, 40, 50];
