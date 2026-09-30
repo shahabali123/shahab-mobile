@@ -311,30 +311,30 @@ const products = [
     freeDelivery: true,
     installment: true
 },
-{
-    id: 1024,
-    name: "Realme Note 70 (4GB-128GB)",
-    brand: "Realme",
-    price: 44999,
-    description: "Realme Note 70 with 4GB RAM and 128GB storage.",
-    images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH9lucVG-azer8RW_KsqgBMMA5FoCTnbRvGjMlirDsnYVqh3sQP6NFTSk&s=10"],
-    specs: { ram: "4GB", storage: "128GB" },
-    stock: 8,
-    freeDelivery: true,
-    installment: true
-},
-{
-    id: 1025,
-    name: "Realme Note 70 (6GB-128GB)",
-    brand: "Realme",
-    price: 46999,
-    description: "Realme Note 70 with 6GB RAM and 128GB storage.",
-    images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH9lucVG-azer8RW_KsqgBMMA5FoCTnbRvGjMlirDsnYVqh3sQP6NFTSk&s=10"],
-    specs: { ram: "6GB", storage: "128GB" },
-    stock: 8,
-    freeDelivery: true,
-    installment: true
-},
+// {
+//     id: 1024,
+//     name: "Realme Note 70 (4GB-128GB)",
+//     brand: "Realme",
+//     price: 44999,
+//     description: "Realme Note 70 with 4GB RAM and 128GB storage.",
+//     images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH9lucVG-azer8RW_KsqgBMMA5FoCTnbRvGjMlirDsnYVqh3sQP6NFTSk&s=10"],
+//     specs: { ram: "4GB", storage: "128GB" },
+//     stock: 8,
+//     freeDelivery: true,
+//     installment: true
+// },
+// {
+//     id: 1025,
+//     name: "Realme Note 70 (6GB-128GB)",
+//     brand: "Realme",
+//     price: 46999,
+//     description: "Realme Note 70 with 6GB RAM and 128GB storage.",
+//     images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH9lucVG-azer8RW_KsqgBMMA5FoCTnbRvGjMlirDsnYVqh3sQP6NFTSk&s=10"],
+//     specs: { ram: "6GB", storage: "128GB" },
+//     stock: 8,
+//     freeDelivery: true,
+//     installment: true
+// },
 {
     id: 1026,
     name: "Realme C100i (4GB-64GB)",
