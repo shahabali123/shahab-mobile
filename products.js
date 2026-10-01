@@ -339,7 +339,7 @@ const products = [
     id: 1026,
     name: "Realme C100i (4GB-64GB)",
     brand: "Realme",
-    price: 30999,
+    price: 40999,
     description: "Realme C100i with 4GB RAM and 64GB storage.",
     images: ["https://media.wisemarket.com.pk/variant/RealmeC100iDawnPurple64GB4GBRAMBrandNew-52630.webp"],
     specs: { ram: "4GB", storage: "64GB" },
