@@ -287,18 +287,18 @@ const products = [
     freeDelivery: true,
     installment: true
 },
-{
-    id: 1021,
-    name: "itel S26 Ultra (8GB-128GB)",
-    brand: "itel",
-    price: 45999,
-    description: "itel S26 Ultra with 8GB RAM and 128GB storage.",
-    images: ["https://alkayconcepts.com/wp-content/uploads/2025/10/6-2.jpg"],
-    specs: { ram: "8GB", storage: "128GB" },
-    stock: 8,
-    freeDelivery: true,
-    installment: true
-},
+// {
+//     id: 1021,
+//     name: "itel S26 Ultra (8GB-128GB)",
+//     brand: "itel",
+//     price: 45999,
+//     description: "itel S26 Ultra with 8GB RAM and 128GB storage.",
+//     images: ["https://alkayconcepts.com/wp-content/uploads/2025/10/6-2.jpg"],
+//     specs: { ram: "8GB", storage: "128GB" },
+//     stock: 8,
+//     freeDelivery: true,
+//     installment: true
+// },
 {
     id: 1022,
     name: "itel S26 Ultra (8GB-256GB)",
