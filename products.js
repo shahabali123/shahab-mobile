@@ -598,6 +598,17 @@ const products = [
     stock: 8,
     freeDelivery: true,
     installment: true
+},
+{
+    id: 10001,
+    name: "Gionee ANC wireless Earbuds",
+    brand: "GIONEE",
+    category: "Gadget",
+    price: 1500,
+    description: "Gionee wireless earbuds. Behtreen aawaz, stylish look.",
+    images: ["../images/gionee.jpeg"],
+    stock: 12,
+    freeDelivery: true
 }
 ];
 
