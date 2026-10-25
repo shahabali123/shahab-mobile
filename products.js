@@ -607,6 +607,7 @@ const products = [
     price: 1500,
     description: "Gionee wireless earbuds. Behtreen aawaz, stylish look.",
     images: ["../images/gionee.jpeg"],
+    specs: { ram: "null", storage: "null" },
     stock: 12,
     freeDelivery: true
 }
