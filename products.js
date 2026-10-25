@@ -610,6 +610,18 @@ const products = [
     specs: { ram: "null", storage: "null" },
     stock: 12,
     freeDelivery: true
+},
+{
+    id: 10002,
+    name: "MI Router power bank",
+    brand: "MI",
+    category: "Gadget",
+    price: 2500,
+    description: "Loadshedding sy hain preshan WiFi router powerbank apky router ko dy instant backup for upto 4 hours.",
+    images: ["../images/router-power-bank.jpeg"],
+    specs: { ram: "null", storage: "null" },
+    stock: 12,
+    freeDelivery: true
 }
 ];
 
