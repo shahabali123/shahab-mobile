@@ -495,7 +495,7 @@ const products = [
     id: 1038,
     name: "Oppo A6c (4GB-64GB)",
     brand: "Oppo",
-    price: 44999,
+    price: 46999,
     description: "Oppo A6c with 4GB RAM and 64GB storage.",
     images: ["https://npcdn.ratopati.com/media/news/pic_HQwTCouG73.jpg"],
     specs: { ram: "4GB", storage: "64GB" },
