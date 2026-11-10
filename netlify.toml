@@ -1,6 +1,6 @@
 [build]
   # Enable Netlify's Prerendering for better SEO and social sharing cards
   prerender = true
-  [build]
-  command = "node generate-sitemap.js"
+[build]
+  command = "node generate-merchant-feed.js && node generate-sitemap.js"
   publish = "."
