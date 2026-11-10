@@ -1,79 +1,169 @@
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 
+// ================================
 // Paths
+// ================================
 const productsPath = path.join(__dirname, 'products.js');
 const sitemapPath = path.join(__dirname, 'sitemap.xml');
 
-// --- Load Products ---
+// ================================
+// Load Products
+// ================================
 const productsContent = fs.readFileSync(productsPath, 'utf8');
-let products = [];
 
-// A safer way to get the products array without using eval()
 const context = {
     products: [],
     installmentConfig: {},
-    generateSlug: (name) => name.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '').replace(/\+/g, '-plus'),
-    initializeProducts: function() {
-        this.products.forEach(p => {
-            if (!p.slug) {
-                p.slug = this.generateSlug(p.name);
+
+    // Generate URL slug from product name
+    generateSlug: (name) => {
+        return name
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/&/g, 'and')
+            .replace(/\+/g, '-plus')
+            .replace(/[()]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    },
+
+    // Generate slug if product doesn't already have one
+    initializeProducts: function () {
+        this.products.forEach(product => {
+            if (!product.slug || product.slug.trim() === '') {
+                product.slug = this.generateSlug(product.name);
             }
         });
     }
 };
 
-const script = new (require('vm').Script)(productsContent);
-script.runInNewContext(context);
-products = context.products;
-
-// Initialize products to generate slugs before creating the sitemap
-context.initializeProducts();
-
-if (!Array.isArray(products)) {
-    console.error('Error: Could not load products array from products.js. Ensure products.js defines a global "products" array.');
+// Run products.js safely
+try {
+    const script = new vm.Script(productsContent);
+    script.runInNewContext(context);
+} catch (error) {
+    console.error('❌ Error loading products.js:');
+    console.error(error.message);
     process.exit(1);
 }
 
+const products = context.products;
+
+// ================================
+// Validate Products
+// ================================
+if (!Array.isArray(products)) {
+    console.error(
+        '❌ Error: Could not load products array from products.js.'
+    );
+    process.exit(1);
+}
+
+// Generate missing slugs
+context.initializeProducts();
+
+// ================================
+// Website URL
+// ================================
 const baseUrl = 'https://shahabmobile.netlify.app/';
 
+// ================================
+// XML Escape Function
+// ================================
+function escapeXml(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+}
+
+// ================================
+// Start Sitemap
+// ================================
 let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${baseUrl}index.html</loc>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}offers.html</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}installments.html</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}calculator.html</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}guide.html</loc>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>${baseUrl}gadgets.html</loc>
-    <priority>0.8</priority>
-  </url>
+
+    <!-- Main Pages -->
+
+    <url>
+        <loc>${baseUrl}index.html</loc>
+        <priority>1.0</priority>
+    </url>
+
+    <url>
+        <loc>${baseUrl}offers.html</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>${baseUrl}installments.html</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>${baseUrl}calculator.html</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>${baseUrl}guide.html</loc>
+        <priority>0.9</priority>
+    </url>
+
+    <url>
+        <loc>${baseUrl}gadgets.html</loc>
+        <priority>0.8</priority>
+    </url>
+
 `;
 
+// ================================
+// Add Product URLs
+// ================================
 products.forEach(product => {
-    sitemapXml += `  <url>
-    <loc>${baseUrl}product.html?slug=${product.slug}</loc>
-    <priority>0.7</priority>
-  </url>
+
+    if (!product.name) {
+        console.warn('⚠️ Product skipped because name is missing.');
+        return;
+    }
+
+    const slug = product.slug || context.generateSlug(product.name);
+
+    const productUrl =
+        `${baseUrl}product.html?slug=${encodeURIComponent(slug)}`;
+
+    sitemapXml += `
+    <url>
+        <loc>${escapeXml(productUrl)}</loc>
+        <priority>0.7</priority>
+    </url>
 `;
 });
 
-sitemapXml += `</urlset>`;
+// ================================
+// Close Sitemap
+// ================================
+sitemapXml += `
+</urlset>
+`;
 
-fs.writeFileSync(sitemapPath, sitemapXml, 'utf8');
-console.log('sitemap.xml generated successfully with all product links!');
+// ================================
+// Write sitemap.xml
+// ================================
+fs.writeFileSync(
+    sitemapPath,
+    sitemapXml,
+    'utf8'
+);
+
+console.log('======================================');
+console.log('✅ sitemap.xml generated successfully!');
+console.log(`📦 Products included: ${products.length}`);
+console.log(`📄 Sitemap: ${sitemapPath}`);
+console.log('======================================');
