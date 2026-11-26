@@ -812,8 +812,7 @@ function initProductPage() {
                                             ${config.plans.map(plan => `
                                                 <td class="p-2 font-bold text-blue-600 text-sm">
                                                     Rs. ${calculateInstallmentDetails(p.price, advPercent, plan.months).emi.toLocaleString()}<span class="text-xs font-normal">/mo</span>
-                                                    <span class="block text-[10px] text-slate-400 font-normal">Total Installments: ${(calculateInstallmentDetails(p.price, advPercent, plan.months).emi * plan.months).toLocaleString()}</span>
-                                                </td>`).join('')}
+<span class="block text-[10px] text-slate-400 font-normal">Total Price: ${calculateInstallmentDetails(p.price, advPercent, plan.months).totalCost.toLocaleString()}</span>                                                </td>`).join('')}
                                         </tr>`;
                                 }).join('')}
                             </tbody>
