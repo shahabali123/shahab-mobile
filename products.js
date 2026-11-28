@@ -135,7 +135,7 @@ const products = [
     id: 1009,
     name: "Infinix Note 60 Pro (8GB-256GB)",
     brand: "Infinix",
-    price: 130999,
+    price: 140999,
     description: "Infinix Note 60 Pro with 8GB RAM and 256GB storage.",
     images: ["https://d3o31au25zfcly.cloudfront.net/newfileadmin/usp/note/note-60-pro/sec8/wap/p3.webp"],
     specs: { ram: "8GB", storage: "256GB" },
